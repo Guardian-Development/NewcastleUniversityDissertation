@@ -1,11 +1,11 @@
-name := """ClientService"""
-version := "1-1-snapshot"
+name := BuildConfig.appName
+version := BuildConfig.appVersion
 
 lazy val scalaV = "2.11.8"
 
 lazy val server = (project in file("server")).settings(
-  name := """ClientService""",
-  version := "1-1-snapshot",
+  name := BuildConfig.appName,
+  version := BuildConfig.appVersion,
   scalaVersion := scalaV,
   scalaJSProjects := Seq(client),
   pipelineStages in Assets := Seq(scalaJSPipeline),

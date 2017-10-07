@@ -2,13 +2,16 @@ package controllers
 
 import javax.inject._
 import play.api.mvc._
+import play.api.Configuration
 
 @Singleton
-class HomeController @Inject() extends Controller {
+class HomeController @Inject()(configuration: Configuration) extends Controller {
 
   def index = Action {
-    //TODO: get app name + version to pass through.
-    Ok(views.html.index("Client Service"))
+    val appName = configuration.underlying.getString("app.name")
+    val appVersion = configuration.underlying.getString("app.version")
+
+    Ok(views.html.index(s"$appName:$appVersion"))
   }
 
 }
