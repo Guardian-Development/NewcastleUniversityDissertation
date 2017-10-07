@@ -15,8 +15,9 @@ lazy val server = (project in file("server")).settings(
     ws,
     "com.vmunier" %% "scalajs-scripts" % "1.0.0",
     "org.webjars" %% "webjars-play" % "2.5.0",
-    "org.webjars" % "bootstrap" % "3.3.7-1",
     "org.webjars" % "jquery" % "3.1.1-1",
+    "org.webjars" % "bootstrap" % "3.3.7",
+    "org.webjars" % "font-awesome" % "4.7.0",
     "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
   )
 ).enablePlugins(PlayScala).
@@ -28,7 +29,8 @@ lazy val client = (project in file("client")).settings(
   persistLauncher in Test := false,
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.1",
-    "be.doeraene" %%% "scalajs-jquery" % "0.9.1"
+    "be.doeraene" %%% "scalajs-jquery" % "0.9.1",
+    "com.lihaoyi" %%% "scalatags" % "0.5.2"
   )
 ).enablePlugins(ScalaJSPlugin, ScalaJSWeb).
   dependsOn(sharedJs)
