@@ -14,3 +14,9 @@ addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.6")
 // scalajs plugins
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.13")
 addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.3")
+
+// Packaging
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.2.2")
+
+// Docker
+addSbtPlugin("se.marcuslonnberg" % "sbt-docker" % "1.4.1")

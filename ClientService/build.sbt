@@ -1,9 +1,11 @@
 name := """ClientService"""
-version := "1-0-snapshot"
+version := "1-1-snapshot"
 
 lazy val scalaV = "2.11.8"
 
 lazy val server = (project in file("server")).settings(
+  name := """ClientService""",
+  version := "1-1-snapshot",
   scalaVersion := scalaV,
   scalaJSProjects := Seq(client),
   pipelineStages in Assets := Seq(scalaJSPipeline),
@@ -19,8 +21,19 @@ lazy val server = (project in file("server")).settings(
     "org.webjars" % "bootstrap" % "3.3.7",
     "org.webjars" % "font-awesome" % "4.7.0",
     "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
-  )
-).enablePlugins(PlayScala).
+  ),
+  dockerfile in docker := {
+      val appDir = stage.value
+      val targetDir = "/app"
+
+      new Dockerfile {
+        from("java")
+        entryPoint(s"$targetDir/bin/${executableScriptName.value}")
+        copy(appDir, targetDir)
+      }
+    },
+    buildOptions in docker := BuildOptions(cache = false)
+).enablePlugins(sbtdocker.DockerPlugin, PlayScala).
   dependsOn(sharedJvm)
 
 lazy val client = (project in file("client")).settings(
