@@ -1,4 +1,6 @@
 # Setting Up Continour Integration
+- Jenkins: Contains the Jenkins Docker image to run the instance of Jenkins. 
+- JenkinsData: Contains the persistent storage Docker image for the Jenkins Docker image to use. 
 
 ## Steps to setup Jenkins in Docker
 1. docker build -t jenkins-data JenkinsData/.
