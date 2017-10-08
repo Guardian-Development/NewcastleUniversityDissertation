@@ -8,5 +8,12 @@
 3. docker build -t jenkins Jenkins/.
 4. docker run -p 8080:8080 --name=jenkins --volumes-from=jenkins-data -d jenkins
 
+# Manual Steps That Need Automating to configure Jenkins
 This, at present, gives a blank Jenkins instance with persisted storage locally. Next steps will be working out what I require on the image to run scala builds and docker and then create the neccessary tasks to set up CI. 
+
+1. sbt plugin required (install on Jenkins)
+2. Go To -> Manage Jenkins -> Global Tool Configuration -> Add Sbt -> Select version for this project.
+3. Add project for branch build with sbt actions of: clean update compile test
+
+
 
