@@ -6,7 +6,7 @@ RUN mkdir /var/cache/jenkins
 RUN chown -R jenkins:jenkins /var/log/jenkins
 RUN chown -R jenkins:jenkins /var/cache/jenkins
 
-RUN /usr/local/bin/install-plugins.sh sbt:1.5 git:3.6.0 github:1.28.0 workflow-multibranch:2.16
+RUN /usr/local/bin/install-plugins.sh sbt:1.5 git:3.6.0 github:1.28.0 workflow-multibranch:2.16 workflow-aggregator:2.5
 
 USER jenkins
 
