@@ -4,7 +4,7 @@ node {
    }
    stage('build-client-service') {
        sh "cd ./ClientService"
-       sh "${tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt clean update compile test"
+       sh "${tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation' subdirPath: './ClientService'}/bin/sbt clean update compile test"
    }
 }
 

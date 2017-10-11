@@ -5,6 +5,9 @@ RUN mkdir -p /var/log/jenkins
 RUN mkdir -p /usr/share/jenkins/ref/plugins
 RUN chown -R jenkins:jenkins /var/log/jenkins
 
+# Copy SBT plugin configuration
+COPY ./SbtConfig/org.jvnet.hudson.plugins.SbtPluginBuilder.xml /var/jenkins_home/
+
 # Copy Jenkins Jobs
 COPY ./BuildConfig/config.xml /var/jenkins_home/jobs/dissertation-project/
 
