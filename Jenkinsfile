@@ -1,6 +1,6 @@
 node 
 {
-  //'sbt' is the plugin configuration name configured on Jenkins. 
+  //'sbt' is the plugin configuration name configured on Jenkins Docker image configured in ./ci. 
   def sbtHome = tool 'sbt'
 
   def SBT = "${sbtHome}/bin/sbt -Dsbt.log.noformat=true"
