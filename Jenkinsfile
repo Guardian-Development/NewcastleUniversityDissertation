@@ -11,6 +11,8 @@ node {
   // Mandatory, to maintain branch integrity
   checkout scm
 
+  cd "./ClientService"
+
   stage('clean') {
     sh "${SBT} clean"
   }
