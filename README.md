@@ -1,6 +1,16 @@
 # Newcastle University Dissertation
 My third year dissertation project.
 
+# Projects 
+## TerraformInfrastructure
+Contains the AWS configuration to be used in production. 
+
+## CI
+Contains the Continous Integration setup and tools to be used. (Jenkins)
+
+## ClientService
+The microservice to be used when serving the client to the users.
+
 # Deploying a new Scala service
 1. sbt docker:publishLocal
 2. docker login
