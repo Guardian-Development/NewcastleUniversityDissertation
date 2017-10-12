@@ -22,8 +22,3 @@
 5. docker rmi jenkins 
 
 
-TODO:
-- work out how to configure sbt plugin in docker file 
-- change jenkins file to build client service and set that to the sbt directory. 
-
-
