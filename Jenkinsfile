@@ -1,5 +1,5 @@
 node {
-  def sbtHome = tool 'default-sbt'
+  def sbtHome = tool 'sbt'
 
   def SBT = "${sbtHome}/bin/sbt -Dsbt.log.noformat=true"
 
