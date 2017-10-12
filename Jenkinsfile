@@ -13,6 +13,8 @@ node {
 
   cd "./ClientService"
 
+  echo "current directory is ${pwd()}"
+
   stage('clean') {
     sh "${SBT} clean"
   }
