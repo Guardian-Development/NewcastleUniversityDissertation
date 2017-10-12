@@ -11,20 +11,15 @@ node {
   // Mandatory, to maintain branch integrity
   checkout scm
 
-  stage('Cleanup') {
+  stage('clean') {
     sh "${SBT} clean"
   }
 
-  stage('Build') {
-    sh "${SBT} package"
+  stage('build') {
+    sh "${SBT} compile"
   }
 
-  stage('Publish-Local') {
-    sh "${SBT} publish-local"
+  stage('test') {
+    sh "${SBT} test"
   }
-
-  stage('Archive') {
-    archive 'target/**/test-dep*.jar'
-  }
-
 }
