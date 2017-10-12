@@ -1,8 +1,7 @@
-node {
+node 
+{
   def sbtHome = tool 'sbt'
-
   def SBT = "${sbtHome}/bin/sbt -Dsbt.log.noformat=true"
-
   def branch = env.BRANCH_NAME
 
   echo "current branch is ${branch}"
@@ -11,21 +10,29 @@ node {
   // Mandatory, to maintain branch integrity
   checkout scm
 
-  stage('clean') {
-    dir ('./ClientService') { 
-        sh "${SBT} clean"
-    }
-  }
+  stage('client-service')
+  {
+    dir ('./ClientService') 
+    { 
+      stage('clean') 
+      {
+          sh "${SBT} clean"
+      }
 
-  stage('build') {
-      dir ('./ClientService') { 
+      stage('update') 
+      {
+          sh "${SBT} update"
+      }
+
+      stage('compile') 
+      {
         sh "${SBT} compile"
       }
-  }
 
-  stage('test') {
-      dir ('./ClientService') { 
+      stage('test') 
+      {
         sh "${SBT} test"
       }
+    }
   }
 }
