@@ -11,19 +11,21 @@ node {
   // Mandatory, to maintain branch integrity
   checkout scm
 
-  cd "./ClientService"
-
-  echo "current directory is ${pwd()}"
-
   stage('clean') {
-    sh "${SBT} clean"
+    dir ('./ClientService') { 
+        sh "${SBT} clean"
+    }
   }
 
   stage('build') {
-    sh "${SBT} compile"
+      dir ('./ClientService') { 
+        sh "${SBT} compile"
+      }
   }
 
   stage('test') {
-    sh "${SBT} test"
+      dir ('./ClientService') { 
+        sh "${SBT} test"
+      }
   }
 }
