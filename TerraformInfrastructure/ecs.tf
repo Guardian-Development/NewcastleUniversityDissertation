@@ -7,7 +7,7 @@ resource "aws_launch_configuration" "ecs_cluster_launch" {
     name = "${var.application_name}-cluster"
     instance_type = "t2.micro"
     image_id = "${lookup(var.amis-ecs, var.region)}"
-    iam_instance_profile = "${aws_iam_instance_profile.ecs_profile.name}"
+    iam_instance_profile = "${aws_iam_instance_profile.ecs.name}"
     security_groups = [
         "${aws_security_group.allow_all_outbound.id}",
         "${aws_security_group.allow_cluster.id}"

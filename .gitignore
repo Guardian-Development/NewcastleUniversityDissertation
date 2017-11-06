@@ -24,17 +24,6 @@ libexec/
 .sbtserver
 .sbtserver.lock
 .DS_Store
-public/ui
-
-node_modules
-!protractor.conf.js
-!karma.conf.js
-*.js
-*.js.map
-dist
-*.log
-.idea
-*.iml
 
 # Terraform
 local-variables.tfvar
