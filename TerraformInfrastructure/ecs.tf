@@ -18,8 +18,8 @@ resource "aws_launch_configuration" "ecs_cluster_launch" {
 resource "aws_autoscaling_group" "ecs_cluster" {
     name = "ecs-auto-scaling"
     availability_zones = ["eu-west-1a", "eu-west-1b"]
-    min_size = 5
-    max_size = 5
+    min_size = 1
+    max_size = 2
     launch_configuration = "${aws_launch_configuration.ecs_cluster_launch.name}"
     load_balancers = ["${aws_elb.client-service-elb.name}"]
 }
