@@ -22,5 +22,4 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
       contentAsString(home) must include ("Loading...")
     }
   }
-
 }
