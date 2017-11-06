@@ -1,11 +1,11 @@
 package controllers
 
 import javax.inject._
+import play.api._
 import play.api.mvc._
-import play.api.Configuration
 
 @Singleton
-class HomeController @Inject()(configuration: Configuration) extends Controller {
+class HomeController @Inject() (components: ControllerComponents, configuration: Configuration) extends AbstractController(components) {
 
   def index = Action {
     val appName = configuration.underlying.getString("app.name")

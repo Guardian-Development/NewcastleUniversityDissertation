@@ -1,0 +1,25 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-sm-12 col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+              <div class="col-sm-5">
+                <h4 class="card-title mb-0">Test Chart For Framework</h4>
+                <div class="small text-muted">November 2015</div>
+          </div>
+          <div class="chart-wrapper" style="height:300px;margin-top:40px;">
+            <canvas baseChart class="chart"
+            [datasets]="mainChartData"
+            [labels]="mainChartLabels"
+            [options]="mainChartOptions"
+            [colors]="mainChartColours"
+            [legend]="mainChartLegend"
+            [chartType]="mainChartType"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
