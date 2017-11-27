@@ -2,3 +2,5 @@ version: '3'
 services:
   video-processing-service:
     build: .
+    volumes:
+     - .:/VideoProcessingService

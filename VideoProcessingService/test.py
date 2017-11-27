@@ -1,5 +1,5 @@
 import face_recognition
-#import cv2
+import cv2
 
 #video_capture = cv2.VideoCapture(0)
 
@@ -8,3 +8,4 @@ import face_recognition
 
 print('Hello World')
 print(face_recognition.__version__)
+print(cv2.__version__)

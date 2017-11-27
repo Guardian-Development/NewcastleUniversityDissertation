@@ -2,7 +2,8 @@
 This service provides video streaming and processing. Its goal is to extract enough useful features from a video clip that accurate anomaly detection can be performed on the video stream. The purpose of this service is to turn the video into a series of events, such as people in the video and their position, which should then be sent to server for advanced anomaly detection.
 
 # Requirements
-- Docker installed 
+- Docker installed
+- Python 3.6 for development
 
 # How To Use
 #### Running
