@@ -9,14 +9,3 @@ import cv2
 print('Hello World')
 print(face_recognition.__version__)
 print(cv2.__version__)
-
-# Get a reference to webcam #0 (the default one)
-counter = 0
-video_capture = cv2.VideoCapture(0)
-while counter < 10:
-    ret, frame = video_capture.read()
-    print(ret)
-    print(frame)
-    counter = counter + 1
-
-video_capture.release()
