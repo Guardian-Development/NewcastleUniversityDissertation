@@ -42,6 +42,9 @@ cd ~ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
 # Dependencies for OpenCV
+
+cd ~
+
 sudo apt-get autoremove \
     libopencv-dev \
     python-opencv
@@ -104,7 +107,7 @@ sudo apt-get install -y \
 wget https://github.com/opencv/opencv_contrib/archive/3.3.0.zip
 unzip 3.3.0.zip
 rm 3.3.0.zip
-mv opencv_contrib-3.3.0 OpenCVModules
+mv opencv_contrib-3.3.0 opencv_contrib
 
 # Install OpenCV
 wget https://github.com/opencv/opencv/archive/3.3.0.zip
@@ -115,7 +118,7 @@ cd OpenCV
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=RELEASE \
-    -DOPENCV_EXTRA_MODULES_PATH=~/OpenCVModules/modules \
+    -DOPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
     -DWITH_QT=ON \
     -DWITH_OPENGL=ON \
     -DFORCE_VTK=ON \
