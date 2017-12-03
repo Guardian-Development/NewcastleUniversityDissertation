@@ -91,10 +91,6 @@ sudo apt-get install -y \
 # Parallelism and linear algebra libraries:
 sudo apt-get install -y libtbb-dev libeigen3-dev
 
-# Optimisation libraries
-sudo apt-get install -y \
-    gfortran
-
 # Python:
 sudo apt-get install -y \
     python-dev \
