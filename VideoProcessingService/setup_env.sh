@@ -47,45 +47,45 @@ sudo apt-get autoremove \
     python-opencv
 
 # Build tools:
-sudo apt-get install -y \ 
+sudo apt-get install -y \
     build-essential \
-    cmake \ 
-    git \ 
-    pkg-config \ 
-    unzip \ 
+    cmake \
+    git \
+    pkg-config \
+    unzip \
     wget
 
 # GUI
-sudo apt-get install -y \ 
+sudo apt-get install -y \
     qt5-default \
     libvtk6-dev
 
 # Media I/O:
 sudo apt-get install -y \
-    zlib1g-dev \ 
+    zlib1g-dev \
     libjpeg-dev \ 
-    libwebp-dev \ 
-    libpng-dev \ 
-    libtiff5-dev \ 
-    libjasper-dev \ 
-    libopenexr-dev \ 
-    libgdal-dev \ 
+    libwebp-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjasper-dev \
+    libopenexr-dev \
+    libgdal-dev \
     libpng12-dev
 
 # Video I/O:
-sudo apt-get install -y \ 
-    libdc1394-22-dev \ 
-    libavcodec-dev \ 
-    libavformat-dev \ 
-    libswscale-dev \ 
-    libtheora-dev \ 
-    libvorbis-dev \ 
-    libxvidcore-dev \ 
+sudo apt-get install -y \
+    libdc1394-22-dev \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libtheora-dev \
+    libvorbis-dev \
+    libxvidcore-dev \
     libx264-dev \
     yasm \
     libopencore-amrnb-dev \
-    libopencore-amrwb-dev \ 
-    libv4l-dev \ 
+    libopencore-amrwb-dev \
+    libv4l-dev \
     libxine2-dev
 
 # Parallelism and linear algebra libraries:
@@ -96,12 +96,12 @@ sudo apt-get install -y \
     gfortran
 
 # Python:
-sudo apt-get install -y \ 
+sudo apt-get install -y \
     python-dev \
-    python-tk \ 
+    python-tk \
     python-numpy \
-    python3-dev \ 
-    python3-tk \ 
+    python3-dev \
+    python3-tk \
     python3-numpy
 
 # Install OpenCV contrib modules
