@@ -92,8 +92,7 @@ sudo apt-get install -y \
 sudo apt-get install -y libtbb-dev libeigen3-dev
 
 # Optimisation libraries
-sudo apt-get install -y \ 
-    libatlas-base-dev \ 
+sudo apt-get install -y \
     gfortran
 
 # Python:
@@ -119,16 +118,16 @@ mv opencv-3.3.0 OpenCV
 cd OpenCV
 mkdir build
 cd build
-cmake CMAKE_BUILD_TYPE=RELEASE \ 
-    -D OPENCV_EXTRA_MODULES_PATH=~/OpenCVModules/modules \
-    -D WITH_QT=ON \ 
-    -D WITH_OPENGL=ON \ 
-    -D FORCE_VTK=ON \ 
-    -D WITH_TBB=ON \
-    -D WITH_GDAL=ON \ 
-    -D WITH_XINE=ON \ 
-    -D BUILD_EXAMPLES=OFF \ 
-    -D ENABLE_PRECOMPILED_HEADERS=OFF ..
+cmake -DCMAKE_BUILD_TYPE=RELEASE \
+    -DOPENCV_EXTRA_MODULES_PATH=~/OpenCVModules/modules \
+    -DWITH_QT=ON \
+    -DWITH_OPENGL=ON \
+    -DFORCE_VTK=ON \
+    -DWITH_TBB=ON \
+    -DWITH_GDAL=ON \
+    -DWITH_XINE=ON \
+    -DBUILD_EXAMPLES=OFF \
+    -DENABLE_PRECOMPILED_HEADERS=OFF ..
 make -j4
 sudo make install
 sudo ldconfig
