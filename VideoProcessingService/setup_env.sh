@@ -63,7 +63,7 @@ sudo apt-get install -y \
 # Media I/O:
 sudo apt-get install -y \
     zlib1g-dev \
-    libjpeg-dev \ 
+    libjpeg-dev \
     libwebp-dev \
     libpng-dev \
     libtiff5-dev \
