@@ -42,8 +42,8 @@ cd ~ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
 # Dependencies for OpenCV
-sudo apt-get autoremove \ 
-    libopencv-dev \ 
+sudo apt-get autoremove \
+    libopencv-dev \
     python-opencv
 
 # Build tools:
