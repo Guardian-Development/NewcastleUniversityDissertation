@@ -29,8 +29,8 @@ apt-get install -y --fix-missing \
     liblapack-dev \
     libswscale-dev \
     pkg-config \
-    python3.4-dev \
-    python3.4-numpy \
+    python3-dev \
+    python3-numpy \
     software-properties-common \
     zip \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
@@ -143,7 +143,7 @@ sudo make install
 sudo ldconfig
 
 source ~/.bashrc
-sudo mkvirtualenv video-processing-py3 -p python3 
+mkvirtualenv video-processing-py3 -p python3 
 
 cd ~/.virtualenvs/video-processing-py3/lib/python3.5/site-packages
 ln -s /usr/local/lib/python3.5/dist-packages/cv2.cpython-35m-x86_64-linux-gnu.so cv2.so
