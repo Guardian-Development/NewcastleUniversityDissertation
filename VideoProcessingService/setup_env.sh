@@ -113,9 +113,6 @@ echo 'export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3' >> ~/.bashrc
 echo 'export WORKON_HOME=$HOME/.virtualenvs'
 echo 'source /usr/local/bin/virtualenvwrapper.sh' >> ~/.bashrc
 
-source ~/.bashrc
-sudo mkvirtualenv video-processing-py3 -p python3 
-
 # Install OpenCV contrib modules
 wget https://github.com/opencv/opencv_contrib/archive/3.3.0.zip
 unzip 3.3.0.zip
@@ -133,7 +130,6 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=RELEASE \
     -DCMAKE_INSTALL_PREFIX=/usr/local \
     -DOPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
-    -DPYTHON_DEFAULT_EXECUTABLE=$(which python3) \
     -DWITH_QT=ON \
     -DWITH_OPENGL=ON \
     -DFORCE_VTK=ON \
@@ -145,6 +141,9 @@ cmake -DCMAKE_BUILD_TYPE=RELEASE \
 make -j4
 sudo make install
 sudo ldconfig
+
+source ~/.bashrc
+sudo mkvirtualenv video-processing-py3 -p python3 
 
 cd ~/.virtualenvs/video-processing-py3/lib/python3.5/site-packages
 ln -s /usr/local/lib/python3.5/dist-packages/cv2.cpython-35m-x86_64-linux-gnu.so cv2.so
