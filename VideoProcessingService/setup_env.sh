@@ -109,9 +109,13 @@ sudo apt-get install -y \
 sudo -H pip3 install -U pip numpy
 sudo pip3 install virtualenv virtualenvwrapper
 echo '# Virtual Environment Wrapper' >> ~/.bashrc
+echo 'export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3' >> ~/.bashrc 
+echo 'export WORKON_HOME=$HOME/.virtualenvs'
 echo 'source /usr/local/bin/virtualenvwrapper.sh' >> ~/.bashrc
+
 source ~/.bashrc
-mkvirtualenv video-processing-py3 -p python3 
+exec bash 
+sudo mkvirtualenv video-processing-py3 -p python3 
 
 # test virtual environment
 workon video-processing-py3
