@@ -110,6 +110,7 @@ sudo -H pip3 install -U pip numpy
 sudo pip3 install virtualenv virtualenvwrapper
 echo '# Virtual Environment Wrapper' >> ~/.bashrc
 echo 'source /usr/local/bin/virtualenvwrapper.sh' >> ~/.bashrc
+source ~/.bashrc
 mkvirtualenv video-processing-py3 -p python3 
 
 # test virtual environment
