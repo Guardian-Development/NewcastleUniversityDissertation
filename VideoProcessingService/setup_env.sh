@@ -101,9 +101,20 @@ sudo apt-get install -y \
     python-dev \
     python-tk \
     python-numpy \
-    python3.4-dev \
-    python3.4-tk \
-    python3.4-numpy
+    python3-dev \
+    python3-tk \
+    python3-numpy \
+    python3-pip
+
+sudo -H pip3 install -U pip numpy
+sudo pip3 install virtualenv virtualenvwrapper
+echo '# Virtual Environment Wrapper' >> ~/.bashrc
+mkvirtualenv video-processing-py3 -p python3 
+
+# test virtual environment
+workon video-processing-py3
+deactivate
+
 
 # Install OpenCV contrib modules
 wget https://github.com/opencv/opencv_contrib/archive/3.3.0.zip
@@ -120,6 +131,7 @@ cd OpenCV
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=RELEASE \
+    -DCMAKE_INSTALL_PREFIX=/usr/local \
     -DOPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
     -DPYTHON_DEFAULT_EXECUTABLE=$(which python3)
     -DWITH_QT=ON \
@@ -133,3 +145,7 @@ cmake -DCMAKE_BUILD_TYPE=RELEASE \
 make -j4
 sudo make install
 sudo ldconfig
+
+cd ~/.virtualenvs/video-processing-py3/lib/python3.5/site-packages
+ln -s /usr/local/lib/python3.5/dist-packages/cv2.cpython-35m-x86_64-linux-gnu.so cv2.so
+
