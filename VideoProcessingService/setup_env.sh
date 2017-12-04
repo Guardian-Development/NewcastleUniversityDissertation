@@ -133,7 +133,7 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=RELEASE \
     -DCMAKE_INSTALL_PREFIX=/usr/local \
     -DOPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
-    -DPYTHON_DEFAULT_EXECUTABLE=$(which python3)
+    -DPYTHON_DEFAULT_EXECUTABLE=$(which python3) \
     -DWITH_QT=ON \
     -DWITH_OPENGL=ON \
     -DFORCE_VTK=ON \
