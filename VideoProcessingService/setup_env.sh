@@ -90,8 +90,8 @@ sudo apt-get install -y \
     libopencore-amrwb-dev \
     libv4l-dev \
     libxine2-dev \
-    ffmpeg \
-    libav-tools
+    libav-tools \
+    ffmpeg
 
 # Parallelism and linear algebra libraries:
 sudo apt-get install -y libtbb-dev libeigen3-dev
