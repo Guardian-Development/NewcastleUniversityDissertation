@@ -29,8 +29,8 @@ apt-get install -y --fix-missing \
     liblapack-dev \
     libswscale-dev \
     pkg-config \
-    python3-dev \
-    python3-numpy \
+    python3.4-dev \
+    python3.4-numpy \
     software-properties-common \
     zip \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
@@ -96,14 +96,14 @@ sudo apt-get install -y \
 # Parallelism and linear algebra libraries:
 sudo apt-get install -y libtbb-dev libeigen3-dev
 
-# Python:
+# Python Requirements:
 sudo apt-get install -y \
     python-dev \
     python-tk \
     python-numpy \
-    python3-dev \
-    python3-tk \
-    python3-numpy
+    python3.4-dev \
+    python3.4-tk \
+    python3.4-numpy
 
 # Install OpenCV contrib modules
 wget https://github.com/opencv/opencv_contrib/archive/3.3.0.zip
@@ -121,6 +121,7 @@ mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=RELEASE \
     -DOPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+    -DPYTHON_DEFAULT_EXECUTABLE=$(which python3)
     -DWITH_QT=ON \
     -DWITH_OPENGL=ON \
     -DFORCE_VTK=ON \
