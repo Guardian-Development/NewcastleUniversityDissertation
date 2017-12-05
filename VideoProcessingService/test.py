@@ -1,14 +1,12 @@
-#import face_recognition
+import face_recognition
 import cv2
 
 #obama_image = face_recognition.load_image_file("obama.jpg")
 #obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
 
 print('Hello World')
-#print(face_recognition.__version__)
+print(face_recognition.__version__)
 print(cv2.__version__)
-print(cv2.__file__)
-print(cv2.getBuildInformation())
 
 # video_capture = cv2.VideoCapture(0)
 
