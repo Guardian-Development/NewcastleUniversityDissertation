@@ -45,3 +45,6 @@ terraform
 local-variables.tfvars
 
 .vscode
+
+# Python
+__pycache__
