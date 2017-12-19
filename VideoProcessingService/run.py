@@ -1,6 +1,6 @@
 import face_recognition
 import cv2
-from video_input.video_input import WebCamVideoInputSource
+from video_input.video_input import WebCamVideoInputSource, LocalFileVideoSource
 
 def main(): 
     """Runs the application
@@ -13,7 +13,7 @@ def main():
     video_source = WebCamVideoInputSource(-1)
     video_source.openSource()
 
-    while video_source.sourceOpen(): 
+    while video_source.sourceOpen():
 
         returned, frame = video_source.getNextFrame()
         face_locations = face_recognition.face_locations(frame)
@@ -31,7 +31,8 @@ def main():
             cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-            cv2.imshow('Video', frame)
+
+        cv2.imshow('Video', frame)
     
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break 
