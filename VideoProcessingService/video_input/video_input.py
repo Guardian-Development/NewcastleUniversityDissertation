@@ -1,6 +1,11 @@
-from cv2 import VideoCapture 
-from numpy import ndarray
+"""Provides video reading capabilities
+
+supports reading of video files, frame by frame, using opencv
+"""
+
 from typing import Tuple
+from cv2 import VideoCapture
+from numpy import ndarray
 
 class VideoInputSource:
     """Represents a video input that can be read
@@ -8,7 +13,7 @@ class VideoInputSource:
     Gains access to local video source and allows frame by frame reading
     """
     
-    def openSource(self) -> bool:
+    def open_source(self) -> bool:
         """Opens the video source to make it available
         
         Opens the video source so that other functions become available on it
@@ -19,16 +24,16 @@ class VideoInputSource:
         
         raise NotImplementedError
     
-    def closeSource(self) -> None:
+    def close_source(self) -> None:
         """Closes the source of this video input 
         
         closes the sourse of this video input
         
         """
-        
+
         raise NotImplementedError
 
-    def getNextFrame(self) -> Tuple[bool, ndarray]:
+    def get_next_frame(self) -> Tuple[bool, ndarray]:
         """Gets the next frame in the video input source
 
         Returns the next frame of the video source along with a 
@@ -40,7 +45,7 @@ class VideoInputSource:
         
         raise NotImplementedError
     
-    def sourceOpen(self) -> bool:
+    def source_open(self) -> bool:
         """Returns true if the video source is currently open
         
         Returns true if the source is open, else false 
@@ -67,8 +72,9 @@ class WebCamVideoInputSource(VideoInputSource):
         """
         
         self.webcam_source = webcam_source
+        self.video_capture = None
 
-    def openSource(self) -> bool:
+    def open_source(self) -> bool:
         """Opens the connection to the webcam to allow reading
         
         Makes use of opencv to read from the webcam source
@@ -80,7 +86,7 @@ class WebCamVideoInputSource(VideoInputSource):
         self.video_capture = VideoCapture(self.webcam_source)
         return True
 
-    def closeSource(self) -> None:
+    def close_source(self) -> None:
         """Closes the connection to the webcam 
         
         Releases opencv connection to webcam 
@@ -88,7 +94,7 @@ class WebCamVideoInputSource(VideoInputSource):
         
         self.video_capture.release()
     
-    def sourceOpen(self) -> bool:
+    def source_open(self) -> bool:
         """Returns whether opencv is currently reading from webcam
         
         Makes use of opencv to test whether we are accessing the webcam or not
@@ -99,7 +105,7 @@ class WebCamVideoInputSource(VideoInputSource):
         
         return self.video_capture.isOpened() 
     
-    def getNextFrame(self) -> Tuple[bool, ndarray]: 
+    def get_next_frame(self) -> Tuple[bool, ndarray]: 
         """Gets the next frame from the webcam
         
         Uses opencv to get the next available frame from the webcam source
@@ -110,7 +116,7 @@ class WebCamVideoInputSource(VideoInputSource):
         
         return self.video_capture.read()
 
-class LocalFileVideoSource(VideoInputSource): 
+class LocalFileVideoSource(VideoInputSource):
     """Allows for reading from a local video file 
     
     Makes use of opencv to read frames from a local video file
@@ -127,8 +133,9 @@ class LocalFileVideoSource(VideoInputSource):
         """
         
         self.video_file_path = file_path
+        self.video_capture = None
 
-    def openSource(self) -> bool:
+    def open_source(self) -> bool:
         """Opens the video file to enable reading
         
         Uses the file_path specified in the constructor to open the file with opencv for reading
@@ -137,10 +144,10 @@ class LocalFileVideoSource(VideoInputSource):
             [bool] -- [true if the file was opened successfully, else false]
         """
         
-        self.video_capture = VideoCapture(self.video_file_path) 
-        return True 
+        self.video_capture = VideoCapture(self.video_file_path)
+        return True
 
-    def closeSource(self) -> None:
+    def close_source(self) -> None:
         """Closes the connection to the video file 
         
         Releases opencv connection on the video file 
@@ -148,7 +155,7 @@ class LocalFileVideoSource(VideoInputSource):
         
         self.video_capture.release()
 
-    def sourceOpen(self) -> bool:
+    def source_open(self) -> bool:
         """Returns whether opencv is currently reading from a video file
         
         Makes use of opencv to test whether we are accessing the video file or not
@@ -159,7 +166,7 @@ class LocalFileVideoSource(VideoInputSource):
         
         return self.video_capture.isOpened() 
 
-    def getNextFrame(self) -> Tuple[bool, ndarray]: 
+    def get_next_frame(self) -> Tuple[bool, ndarray]:
         """Gets the next frame from the video file being read
         
         Uses opencv to get the next available frame from the local video source

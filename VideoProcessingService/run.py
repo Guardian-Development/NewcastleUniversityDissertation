@@ -1,8 +1,13 @@
+"""Runs the application
+
+Runs the application
+"""
+
 import face_recognition
 import cv2
 from video_input.video_input import WebCamVideoInputSource, LocalFileVideoSource
 
-def main(): 
+def main():
     """Runs the application
     
     Starts the application
@@ -11,11 +16,11 @@ def main():
     obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
 
     video_source = WebCamVideoInputSource(-1)
-    video_source.openSource()
+    video_source.open_source()
 
-    while video_source.sourceOpen():
+    while video_source.source_open():
 
-        returned, frame = video_source.getNextFrame()
+        _, frame = video_source.get_next_frame()
         face_locations = face_recognition.face_locations(frame)
         face_encodings = face_recognition.face_encodings(frame, face_locations)
 
@@ -37,7 +42,7 @@ def main():
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break 
 
-    video_source.closeSource()
+    video_source.close_source()
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
