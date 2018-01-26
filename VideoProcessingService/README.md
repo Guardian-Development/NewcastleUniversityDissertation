@@ -98,8 +98,3 @@ Install Instruction Opencv:
     - cd  dlib/ 
     - workon cv (virtual environment for python)
     - python3 setup.py install --yes USE_AVX_INSTRUCTIONS
-
-
-
-
-
