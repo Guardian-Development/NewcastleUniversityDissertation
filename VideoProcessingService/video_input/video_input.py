@@ -19,7 +19,7 @@ class VideoInputSource:
         Opens the video source so that other functions become available on it
         
         Raises:
-            NotImplementedError -- [description]
+            NotImplementedError -- should be implemented in child classes
         """
         
         raise NotImplementedError
