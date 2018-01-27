@@ -21,13 +21,10 @@ def start_application(video_source: VideoInputSource):
         if not got_next_frame:
             continue
 
-        face_locations = person_detector.detect(frame)
+        people_locations = person_detector.detect(frame)
 
-        for(top, right, bottom, left) in face_locations:
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-            font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, 'Person', (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+       	for x, y, x_plus_width, y_plus_height in people_locations:
+            cv2.rectangle(frame, (x, y), (x_plus_width, y_plus_height), (0, 255, 0), 2)
 
         cv2.imshow('Video', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
