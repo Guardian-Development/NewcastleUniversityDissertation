@@ -41,7 +41,7 @@ class PersonDetector(Detector):
         self.hog_detector = hog
 
     def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float]]:
-        """Detects people in an image and returns a list of people that are seen.
+        """Detects people in an image and returns a list of people that are seen
 
         Makes use of opencv hog model with an SVM detector to find the people
         It then uses object detection non_max_suppression function to help merge false positives
@@ -58,3 +58,33 @@ class PersonDetector(Detector):
         initial_people = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rectangles])
         final_detected_people = non_max_suppression(initial_people, probs=None, overlapThresh=0.65)
         return final_detected_people
+
+class CarDetector(Detector):
+    """Detects cars within an image
+
+        Uses a cascade xml file trained for car detection
+    """
+
+    def __init__(self, car_cascade_src: str):
+        """Detects cars within an image
+
+        Uses a cascade xml file trained for car detection
+        
+        Arguments:
+            car_cascade_src: str {[str]} -- [the file path to the location of the car cascade xml configuration]
+        """
+        self.car_detector = cv2.CascadeClassifier(car_cascade_src)
+    
+    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float]]:
+        """Detects cars within an image and returns a list of cars that are seen
+
+        It uses a pre-made car cascade model and uses the open_cv CascadeClassifier
+        
+        Arguments:
+            frame: ndarray {[ndarray]} -- [The image to detect cars in]
+        """
+        rectangles = self.car_detector.detectMultiScale(frame, scaleFactor=1.1, minNeighbors=4)
+
+        initial_cars = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rectangles])
+        final_cars = non_max_suppression(initial_cars, probs=None, overlapThresh=0.1)
+        return final_cars
