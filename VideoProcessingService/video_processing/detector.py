@@ -15,11 +15,12 @@ class Detector:
     """
 
 
-    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float]]:
+    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
         """Detects a feature within a numpy array 
         
         Returns the list of locations in the image the feature occurs 
         Returns the x and y coordinates of the bottom left corner, then the x + width and y + height
+        Returns coordinate along with the str type of this detected object
         
         Arguments:
             frame: ndarray {[ndarray]} -- [the image to detect features within]
@@ -40,7 +41,7 @@ class PersonDetector(Detector):
         hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
         self.hog_detector = hog
 
-    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float]]:
+    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
         """Detects people in an image and returns a list of people that are seen
 
         Makes use of opencv hog model with an SVM detector to find the people
@@ -57,7 +58,7 @@ class PersonDetector(Detector):
 
         initial_people = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rectangles])
         final_detected_people = non_max_suppression(initial_people, probs=None, overlapThresh=0.65)
-        return final_detected_people
+        return [(x, y, x_plus_width, y_plus_height, "person") for (x, y, x_plus_width, y_plus_height) in final_detected_people]
 
 class CarDetector(Detector):
     """Detects cars within an image
@@ -75,7 +76,7 @@ class CarDetector(Detector):
         """
         self.car_detector = cv2.CascadeClassifier(car_cascade_src)
     
-    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float]]:
+    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
         """Detects cars within an image and returns a list of cars that are seen
 
         It uses a pre-made car cascade model and uses the open_cv CascadeClassifier
@@ -87,4 +88,4 @@ class CarDetector(Detector):
 
         initial_cars = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rectangles])
         final_cars = non_max_suppression(initial_cars, probs=None, overlapThresh=0.1)
-        return final_cars
+        return [(x, y, x_plus_width, y_plus_height, "car") for (x, y, x_plus_width, y_plus_height) in final_cars]
