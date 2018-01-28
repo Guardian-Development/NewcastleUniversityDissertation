@@ -5,7 +5,6 @@ supports reading of video files, frame by frame, using opencv
 
 from typing import Tuple
 from cv2 import VideoCapture
-import cv2
 from numpy import ndarray
 
 class VideoInputSource:
