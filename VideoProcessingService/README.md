@@ -36,6 +36,12 @@ This service provides video annotation and object tracking. Given a video feed, 
     - mkvirtualenv cv
 
 6. To install packages and run
-    - workon cv 
+    - workon cv
     - pip install -r requirements.txt (from VideoProcessingService directory)
     - run: python run.py -h
+
+### Test Videos
+
+    - https://www.youtube.com/watch?v=hTUyzF4v9KA
+    - https://www.youtube.com/watch?v=YwbP3Z30gUY
+    - https://www.youtube.com/watch?v=Y1jTEyb3wiI
