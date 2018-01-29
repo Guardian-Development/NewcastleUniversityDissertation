@@ -1,20 +1,20 @@
-# Video Processing Service 
-This service provides video streaming and processing. Its goal is to extract enough useful features from a video clip that accurate anomaly detection can be performed on the video stream. The purpose of this service is to turn the video into a series of events, such as people in the video and their position, which should then be sent to server for advanced anomaly detection.
+# Video Processing Service
 
-# Environment 
-- Linux Ubuntu 16.04.3 LTS environment required 
+This service provides video annotation and object tracking. Given a video feed, it will detect various objects within the feed and then has the ability to send this information to a server which can then perform event extrapolation and anomaly detection.
 
-# To setup:
-- Take base image and install: https://www.ubuntu.com/download/desktop 
-Install Instruction Opencv:
+## Environment
 
-## Install Instructions 
+- Linux Ubuntu 16.04.3 LTS environment required
 
-1. Update Environment 
+### Install Instructions
+
+- Take base image and install: https://www.ubuntu.com/download/desktop
+
+1. Update Environment
     - sudo apt-get update
     - sudo apt-get upgrade
 
-2. OpenCV required packages 
+2. OpenCV required packages
     - sudo apt-get install build-essential cmake git pkg-config
     - sudo apt-get install libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev
     - sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
@@ -30,6 +30,7 @@ Install Instruction Opencv:
     - export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
     - export WORKON_HOME=$HOME/.virtualenvs
     - source /usr/local/bin/virtualenvwrapper.sh
+
 5. Reload ~/.bashrc and create virtual env named cv
     - source ~/.bashrc
     - mkvirtualenv cv
@@ -54,12 +55,11 @@ Install Instruction Opencv:
     - mkdir build
     - cd build
     - cmake -D CMAKE_BUILD_TYPE=RELEASE \
-	-D CMAKE_INSTALL_PREFIX=/usr/local \
-	-D INSTALL_C_EXAMPLES=OFF \
-	-D INSTALL_PYTHON_EXAMPLES=ON \
-	-D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
-	-D BUILD_EXAMPLES=ON ..
-
+	    -D CMAKE_INSTALL_PREFIX=/usr/local \
+	    -D INSTALL_C_EXAMPLES=OFF \
+	    -D INSTALL_PYTHON_EXAMPLES=ON \
+	    -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+	    -D BUILD_EXAMPLES=ON ..
     - make -j4
     - sudo make install
     - sudo ldconfig
@@ -69,7 +69,7 @@ Install Instruction Opencv:
     - cd ~/.virtualenvs/cv/lib/python3.5/site-packages/
     - ln -s /usr/local/lib/python3.5/site-packages/cv2.cpython-34m.so cv2.so
 
-10. Install face_reocognition requirements: 
+10. Install face_reocognition requirements
     - apt-get install -y --fix-missing \
         build-essential \
         cmake \
@@ -95,6 +95,6 @@ Install Instruction Opencv:
 
     - mkdir -p dlib
     - git clone -b 'v19.7' --single-branch https://github.com/davisking/dlib.git dlib/
-    - cd  dlib/ 
+    - cd  dlib/
     - workon cv (virtual environment for python)
     - python3 setup.py install --yes USE_AVX_INSTRUCTIONS
