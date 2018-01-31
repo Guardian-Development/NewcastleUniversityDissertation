@@ -55,12 +55,12 @@ This service provides video annotation and object tracking. Given a video feed, 
 
 To create a topic:
 
-- bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+- bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic topic_name
 - bin/kafka-topics.sh --list --zookeeper localhost:2181
 
 To remove a topic:
 
-- bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic your_topic_name
+- bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic topic_name
 
 ### Test Videos
 
