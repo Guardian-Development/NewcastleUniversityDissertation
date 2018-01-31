@@ -40,6 +40,28 @@ This service provides video annotation and object tracking. Given a video feed, 
     - pip install -r requirements.txt (from VideoProcessingService directory)
     - run: python run.py -h
 
+#### Apache Kafka Install
+
+1. Require Java installed
+    - sudo apt-get install default-jdk
+2. Visit https://www.apache.org/dyn/closer.cgi?path=/kafka/1.0.0/kafka_2.11-1.0.0.tgz
+    - Download first link
+3. tar -xzf kafka_2.11-1.0.0.tgz
+4. cd kafka_2.11-1.0.0
+5. Start built in ZooKeeper single node server
+    - bin/zookeeper-server-start.sh config/zookeeper.properties
+6. Start Kafka server
+    - bin/kafka-server-start.sh config/server.properties
+
+To create a topic:
+
+- bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+- bin/kafka-topics.sh --list --zookeeper localhost:2181
+
+To remove a topic:
+
+- bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic your_topic_name
+
 ### Test Videos
 
     - https://www.youtube.com/watch?v=hTUyzF4v9KA
