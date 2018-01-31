@@ -64,7 +64,7 @@ To remove a topic:
 
 To see messages published to topic in console:
 
-- bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic video_processing --from-beginning
+- bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topic_name --from-beginning
 
 ### Test Videos
 
