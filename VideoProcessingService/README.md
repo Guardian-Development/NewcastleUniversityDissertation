@@ -62,6 +62,10 @@ To remove a topic:
 
 - bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic topic_name
 
+To see messages published to topic in console:
+
+- bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic video_processing --from-beginning
+
 ### Test Videos
 
     - https://www.youtube.com/watch?v=hTUyzF4v9KA
