@@ -10,6 +10,7 @@ from video_processing.frame_processing import ResizeFrameProcessor, BlackAndWhit
 from video_processing.detector import CarDetector, PersonDetector
 from video_processing.stopping_criteria import QuitButtonPressedStoppingCriteria
 from video_output.video_output import LocalDisplayVideoOutput
+from message_sending.sender import ApacheKafkaMessageSender
 
 if __name__ == '__main__':
     ARGUMENTS = process_command_line_arguments()
@@ -29,5 +30,10 @@ if __name__ == '__main__':
                 .with_video_output_stage(LocalDisplayVideoOutput())\
                 .with_processing_stopping_criteria(QuitButtonPressedStoppingCriteria())\
                 .build()
+
+    # Test of ability to send message to Apache Kafka
+    TEST_KAFKA_SENDER = ApacheKafkaMessageSender(
+        server_address="localhost", topic="video_processing")
+    TEST_KAFKA_SENDER.send_message("test message")
 
     start_application(PIPELINE)

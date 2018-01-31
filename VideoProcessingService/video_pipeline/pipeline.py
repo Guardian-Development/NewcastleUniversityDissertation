@@ -9,6 +9,7 @@ from video_processing.frame_processing import FrameProcessor
 from video_processing.detector import Detector
 from video_processing.stopping_criteria import VideoProcessingStoppingCriteria
 from video_output.video_output import VideoOutput
+from message_sending.sender import MessageSender
 
 class VideoPipeline(object):
     """The video processing pipeline
@@ -21,6 +22,7 @@ class VideoPipeline(object):
                  video_frame_processing_stages: List[FrameProcessor],
                  video_processing_stages: List[Detector],
                  video_output_stages: List[VideoOutput],
+                 message_senders: List[MessageSender],
                  video_processing_stopping_criteria: VideoProcessingStoppingCriteria):
         """Initialises the pipeline with the passed in stages
 
@@ -33,6 +35,8 @@ class VideoPipeline(object):
                 -- [the detectors that should be applied to each frame to detect objects]
             video_output_stages: List[VideoOutput] {[VideoOutput]}
                 -- [the output locations of the pipeline]
+            message_senders: List[MessageSender] {[MessageSender]}
+                -- [object locations will be passed to all message senders allowing them to be stored]
             video_processing_stopping_criteria: VideoProcessingStoppingCriteria {[VideoProcessingStoppingCriteria]}
                 -- [the stopping criteria that should be met to enable early termination of the pipeline]
         """
@@ -41,6 +45,7 @@ class VideoPipeline(object):
         self.video_frame_processing_stages = video_frame_processing_stages
         self.video_processing_stages = video_processing_stages
         self.video_output_stages = video_output_stages
+        self.message_senders = message_senders
         self.video_processing_stopping_criteria = video_processing_stopping_criteria
 
     def run_pipeline(self):
@@ -72,6 +77,9 @@ class VideoPipeline(object):
 
             for video_output_stage in self.video_output_stages:
                 video_output_stage.produce_output(processed_frame, object_locations)
+
+            for message_sender in self.message_senders:
+                message_sender.send_message(object_locations)
             
             if self.video_processing_stopping_criteria.should_stop_processing():
                 break
@@ -93,6 +101,7 @@ class VideoPipelineBuilder(object):
         self.video_frame_processing_stages = []
         self.video_processing_stages = []
         self.video_output_stages = []
+        self.message_senders = []
         self.video_processing_stopping_criteria = None
 
     def with_frame_processing_stage(self, video_frame_processing_stage: FrameProcessor) -> "VideoPipelineBuilder":
@@ -135,6 +144,19 @@ class VideoPipelineBuilder(object):
         self.video_output_stages.append(video_output_stage)
         return self
 
+    def with_message_sender(self, message_sender: MessageSender) -> "VideoPipelineBuilder":
+        """Adds a message sender to the pipeline
+        
+        Arguments:
+            message_sender: MessageSender {[MessageSender]} -- [the message sender to add to the pipeline]
+        
+        Returns:
+            [VideoPipelineBuilder] -- [return this]
+        """
+
+        self.message_senders.append(message_sender)
+        return self
+
     def with_processing_stopping_criteria(self, processing_stopping_criteria: VideoProcessingStoppingCriteria) -> "VideoPipelineBuilder":
         """Adds the early stopping criteria to the pipeline
         
@@ -160,4 +182,5 @@ class VideoPipelineBuilder(object):
                              self.video_frame_processing_stages,
                              self.video_processing_stages,
                              self.video_output_stages,
+                             self.message_senders,
                              self.video_processing_stopping_criteria)
