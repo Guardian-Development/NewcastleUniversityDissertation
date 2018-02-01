@@ -13,6 +13,9 @@ from video_output.video_output import LocalDisplayVideoOutput
 from message_sending.sender import ApacheKafkaMessageSender
 
 if __name__ == '__main__':
+    """Parses command line input, and starts the video processing pipeline
+    """
+
     ARGUMENTS = process_command_line_arguments()
 
     PIPELINE = None
