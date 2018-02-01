@@ -29,11 +29,9 @@ if __name__ == '__main__':
                 .with_video_processing_stage(PersonDetector())\
                 .with_video_output_stage(LocalDisplayVideoOutput())\
                 .with_processing_stopping_criteria(QuitButtonPressedStoppingCriteria())
-    
+               
     if ARGUMENTS.kafkaurl is not None and ARGUMENTS.kafkatopic is not None:
-        # Test of ability to send message to Apache Kafka
-        TEST_KAFKA_SENDER = ApacheKafkaMessageSender(
-            server_address=ARGUMENTS.kafkaurl, topic=ARGUMENTS.kafkatopic)
-        TEST_KAFKA_SENDER.send_message("test message")
+        PIPELINE = PIPELINE.with_message_sender(ApacheKafkaMessageSender(
+            server_address=ARGUMENTS.kafkaurl, topic=ARGUMENTS.kafkatopic))
 
     start_application(PIPELINE.build())

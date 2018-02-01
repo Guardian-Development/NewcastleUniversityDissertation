@@ -58,7 +58,11 @@ class PersonDetector(Detector):
 
         initial_people = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rectangles])
         final_detected_people = non_max_suppression(initial_people, probs=None, overlapThresh=0.65)
-        return [(x, y, x_plus_width, y_plus_height, "person") for (x, y, x_plus_width, y_plus_height) in final_detected_people]
+        return [(x.item(),
+                 y.item(),
+                 x_plus_width.item(),
+                 y_plus_height.item(),
+                 "person") for (x, y, x_plus_width, y_plus_height) in final_detected_people]
 
 class CarDetector(Detector):
     """Detects cars within an image
@@ -88,4 +92,8 @@ class CarDetector(Detector):
 
         initial_cars = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rectangles])
         final_cars = non_max_suppression(initial_cars, probs=None, overlapThresh=0.1)
-        return [(x, y, x_plus_width, y_plus_height, "car") for (x, y, x_plus_width, y_plus_height) in final_cars]
+        return [(x.item(),
+                 y.item(),
+                 x_plus_width.item(),
+                 y_plus_height.item(),
+                 "car") for (x, y, x_plus_width, y_plus_height) in final_cars]

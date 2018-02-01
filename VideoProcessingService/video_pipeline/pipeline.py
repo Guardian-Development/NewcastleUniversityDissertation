@@ -62,7 +62,7 @@ class VideoPipeline(object):
         self.video_input.open_source()
 
         while self.video_input.source_open():
-
+            
             got_next_frame, frame = self.video_input.get_next_frame()
             if not got_next_frame:
                 break
