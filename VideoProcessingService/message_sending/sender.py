@@ -2,7 +2,7 @@
 
 This service can be used to send information to server, for instance through Apache Kafka
 """
-from typing import Any
+from typing import Any, List, Tuple
 import json
 from kafka import KafkaProducer
 
@@ -27,7 +27,6 @@ class ApacheKafkaMessageSender(MessageSender):
     Each initialised message sender can send to a specific topic of the Apache Kafka server
     """
 
-
     def __init__(self, server_address: str, topic: str):
         """Initialises this message sender for a given topic
         
@@ -43,11 +42,31 @@ class ApacheKafkaMessageSender(MessageSender):
             api_version=(0, 10, 1))
         self.topic = topic
 
-    def send_message(self, message: Any) -> None:
-        """Send a message to the Apache Kafka server condigured when initialisng this class
+    def send_message(self, message: List[Tuple[float, float, float, float, str]]) -> None:
+        """Sends a message for a list of detected objects through Apache Kafka
         
         Arguments:
-            message: Any {[any]} -- [send the given message to the server]
+            message: List[Tuple[float {[float]} -- [x coordinate]
+            float {[float]} -- [y coordinate]
+            float {[float]} -- [x + width coordinate]
+            float {[float]} -- [y + height coordinate]
+            str]] {[str]} -- [detected object type]
         """
-        future = self.producer.send(self.topic, message)
-        future.get(timeout=0.1)
+        json_message = convert_message_to_json(message)
+        future = self.producer.send(self.topic, json_message)
+        future.get(timeout=0.2)
+
+    def convert_message_to_json(self, message: List[Tuple[float, float, float, float, str]]) -> None:
+        json_mesage = {}
+        built_objects = []
+        for detected_object in message: 
+            json_detected_object = {} 
+            json_detected_object['x'] = detected_object[0]
+            json_detected_object['y'] = detected_object[1]
+            json_detected_object['x_plus_width'] = detected_object[2]
+            json_detected_object['y_plus_height'] = detected_object[3]
+            json_detected_object['type'] = detected_object[4]
+            built_objects.append(json_detected_object)
+        json_mesage['detected_objects'] = built_objects
+        return json_mesage
+
