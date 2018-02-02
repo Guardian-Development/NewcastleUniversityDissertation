@@ -56,13 +56,7 @@ class Tracker(Detector):
         if not self.object_trackers:
             self.init_object_trackers(frame, detected_objects)
             return detected_objects
-
-        # are there any new objects to track?
-        # - trackers need to cache direction/vector
-        # - caclulate centre of bounding boxes 
-        # - calculate distance to any of the tracked objects
-        # - if distance is within a threshold then probably tracking same object and remove
-
+            
         # build object locations based on tracking 
         tracked_objects = []
         for tracker in self.object_trackers: 
