@@ -3,6 +3,7 @@
 
 from typing import List, Tuple
 import cv2
+from math import hypot
 from numpy import ndarray
 from video_processing.detector import Detector
 
@@ -57,10 +58,10 @@ class Tracker(Detector):
             return detected_objects
 
         # are there any new objects to track?
+        # - trackers need to cache direction/vector
         # - caclulate centre of bounding boxes 
         # - calculate distance to any of the tracked objects
         # - if distance is within a threshold then probably tracking same object and remove
-
 
         # build object locations based on tracking 
         tracked_objects = []
@@ -72,6 +73,36 @@ class Tracker(Detector):
                     (int(x), int(y), int(x + width), int(y + height), "tracked_object"))
             else: 
                 self.object_trackers.remove(tracker)
+        
+        previous_objects_centres = [
+            (x_plus_width / 2, y_plus_height / 2)
+            for (_, _, x_plus_width, y_plus_height, _)
+                in tracked_objects]
+
+        detected_objects_centres = [
+            (x_plus_width / 2, y_plus_height / 2)
+            for (_, _, x_plus_width, y_plus_height, _)
+                in detected_objects]
+        
+        # using magic number that should be configured about what distance is considered new
+        new_objects = [
+            obj
+            for d_centre, obj
+                in zip(detected_objects_centres, detected_objects)
+                if not any(p_centre for p_centre in previous_objects_centres
+                    if hypot(p_centre[0] - d_centre[0], p_centre[1] - d_centre[1])) < 1.01]
+
+        print(new_objects)
+        
+        new_object_trackers = [cv2.TrackerKCF_create() for _ in new_objects]
+        for tracker, detected_object in zip(new_object_trackers, new_objects):
+            ok = tracker.init(frame, detected_object[:4])
+            if not ok:
+                new_object_trackers.remove(tracker)
+                print("FAILED to init tracker")
+        
+        self.object_trackers.extend(new_object_trackers)
+        tracked_objects.extend(new_objects)
 
         self.previous_detected_objects = tracked_objects
         return self.previous_detected_objects
