@@ -49,7 +49,23 @@ class Tracker(Detector):
     def intersection_over_union(self,
                                 box1: Tuple[float, float, float, float],
                                 box2: Tuple[float, float, float, float]) -> int: 
-        return 1
+        box1_left_x, box1_bottom_y, box1_right_x, box1_top_y = box1
+        box2_left_x, box2_bottom_y, box2_right_x, box2_top_y = box2
+
+        intersection_left_x = max(box1_left_x, box2_left_x)
+        intersection_bottom_y = max(box1_bottom_y, box2_bottom_y)
+        intersection_right_x = min(box1_right_x, box2_right_x)
+        intersection_top_y = min(box1_top_y, box2_top_y)
+
+        intersection_area = (intersection_right_x - intersection_left_x + 1) * \
+                            (intersection_top_y - intersection_bottom_y + 1)
+        
+        box1_area = (box1_right_x - box1_left_x + 1) * \
+                    (box1_top_y - box1_bottom_y + 1)
+        box2_area = (box2_right_x - box2_left_x + 1) * \
+                    (box2_top_y - box2_bottom_y + 1)
+        
+        return intersection_area / float(box1_area + box2_area - intersection_area)
                 
 
     def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
@@ -93,15 +109,14 @@ class Tracker(Detector):
 
                 # if rectangles collide then lets see how much by
                 if self.bounding_boxes_collide(detected_object[:4], tracked_object[:4]):
-                    print("collided")
                     collision_amount = self.intersection_over_union(detected_object[:4], tracked_object[:4])
-                    
                     # if they breach theshold of collision, they are likely the same thing
                     # therefore take the detected object over tracker as source of truth
                     if collision_amount > 0.5:
                         self.object_trackers.remove(tracker)
 
-                        if is_new_object_to_track: 
+                        if is_new_object_to_track:
+                            print("collided so adding")
                             is_new_object_to_track = False
                             new_tracker = cv2.TrackerKCF_create()
                             ok = new_tracker.init(frame, detected_object[:4])
@@ -113,6 +128,7 @@ class Tracker(Detector):
                             new_objects.append(detected_object)
                 
             if is_new_object_to_track: 
+                print("didnt collide adding")
                 new_tracker = cv2.TrackerKCF_create()
                 ok = new_tracker.init(frame, detected_object[:4])
                 if not ok:
@@ -121,7 +137,5 @@ class Tracker(Detector):
                     break
                 self.object_trackers.append(new_tracker)
                 new_objects.append(detected_object)
-                
 
-        print(new_objects)
         return tracked_objects + new_objects
