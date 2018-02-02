@@ -2,7 +2,7 @@
 
 Responsible for starting the application correctly based on the command line arguments passed
 """
-from command_line_procesor import process_command_line_arguments, VideoProcesingType
+from command_line_procesor import process_command_line_arguments, VideoProcessingType
 from application import start_application
 from video_pipeline.pipeline import VideoPipelineBuilder
 from video_input.video_input import WebCamVideoInputSource, LocalFileVideoSource
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     ARGUMENTS = process_command_line_arguments()
 
     PIPELINE = None
-    if ARGUMENTS.videosource == VideoProcesingType.webcam:
+    if ARGUMENTS.videosource == VideoProcessingType.webcam:
         PIPELINE = VideoPipelineBuilder(WebCamVideoInputSource(ARGUMENTS.webcam))
     else:
         PIPELINE = VideoPipelineBuilder(LocalFileVideoSource(ARGUMENTS.filelocation))
