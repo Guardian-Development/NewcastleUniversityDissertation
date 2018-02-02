@@ -23,7 +23,6 @@ class Tracker(Detector):
 
         self.object_detectors = object_detectors
         self.object_trackers = []
-        self.previous_detected_objects = []
 
     def init_object_trackers(self, 
                              frame: ndarray,
@@ -34,6 +33,16 @@ class Tracker(Detector):
             if not ok:
                 self.object_trackers.remove(tracker)
                 print("FAILED to init tracker")
+
+    def bounding_boxes_collide(self,
+                               box1: Tuple[float, float, float, float],
+                               box2: Tuple[float, float, float, float]) -> bool:
+        return False
+
+    def intersection_over_union(self,
+                                box1: Tuple[float, float, float, float],
+                                box2: Tuple[float, float, float, float]) -> int: 
+        return 0
                 
 
     def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
@@ -56,7 +65,7 @@ class Tracker(Detector):
         if not self.object_trackers:
             self.init_object_trackers(frame, detected_objects)
             return detected_objects
-            
+
         # build object locations based on tracking 
         tracked_objects = []
         for tracker in self.object_trackers: 
@@ -68,35 +77,24 @@ class Tracker(Detector):
             else: 
                 self.object_trackers.remove(tracker)
         
-        previous_objects_centres = [
-            (x_plus_width / 2, y_plus_height / 2)
-            for (_, _, x_plus_width, y_plus_height, _)
-                in tracked_objects]
+        new_objects = []
+        for detected_object in detected_objects: 
+            for tracked_object, tracker in zip(tracked_objects, self.object_trackers): 
 
-        detected_objects_centres = [
-            (x_plus_width / 2, y_plus_height / 2)
-            for (_, _, x_plus_width, y_plus_height, _)
-                in detected_objects]
-        
-        # using magic number that should be configured about what distance is considered new
-        new_objects = [
-            obj
-            for d_centre, obj
-                in zip(detected_objects_centres, detected_objects)
-                if not any(p_centre for p_centre in previous_objects_centres
-                    if hypot(p_centre[0] - d_centre[0], p_centre[1] - d_centre[1])) < 1.01]
+                # if rectangles collide then lets see how much by
+                if self.bounding_boxes_collide(detected_object[:4], tracked_object): 
+                    collision_amount = self.intersection_over_union(detected_object[:4], tracked_object)
+                    
+                    # if they breach theshold of collision, they are likely the same thing
+                    # therefore take the detected object over tracker as source of truth
+                    if collision_amount > 0.5: 
+                        self.object_trackers.remove(tracker)
+                        new_tracker = cv2.TrackerKCF_create()
+                        ok = new_tracker.init(frame, detected_object[:4])
+                        if not ok:
+                            self.object_trackers.remove(new_tracker)
+                            print("FAILED to init tracker")
+                            continue
+                        new_objects.append(detected_object)
 
-        print(new_objects)
-        
-        new_object_trackers = [cv2.TrackerKCF_create() for _ in new_objects]
-        for tracker, detected_object in zip(new_object_trackers, new_objects):
-            ok = tracker.init(frame, detected_object[:4])
-            if not ok:
-                new_object_trackers.remove(tracker)
-                print("FAILED to init tracker")
-        
-        self.object_trackers.extend(new_object_trackers)
-        tracked_objects.extend(new_objects)
-
-        self.previous_detected_objects = tracked_objects
-        return self.previous_detected_objects
+        return tracked_objects.extend(new_objects)
