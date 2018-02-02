@@ -21,7 +21,19 @@ class Tracker(Detector):
         """
 
         self.object_detectors = object_detectors
-        self.tracking_objects = []
+        self.object_trackers = []
+        self.previous_detected_objects = []
+
+    def init_object_trackers(self, 
+                             frame: ndarray,
+                             detected_objects: List[Tuple[float, float, float, float, str]]) -> None:
+        self.object_trackers = [cv2.TrackerKCF_create() for _ in detected_objects]
+        for tracker, detected_object in zip(self.object_trackers, detected_objects):
+            ok = tracker.init(frame, detected_object[:4])
+            if not ok:
+                self.object_trackers.remove(tracker)
+                print("FAILED to init tracker")
+                
 
     def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
         """Detects objects within a frame
@@ -40,23 +52,26 @@ class Tracker(Detector):
             detected_objects.extend(detector.detect(frame))
         
         # if we have never detected any objects before, init tracker for all
-        if not self.tracking_objects:
-            self.tracking_objects = [cv2.TrackerKCF_create() for _ in detected_objects]
-            for tracker, detected_object in zip(self.tracking_objects, detected_objects):
-                ok = tracker.init(frame, detected_object[:4])
-                if not ok: 
-                    print("FAILED to init tracker")
+        if not self.object_trackers:
+            self.init_object_trackers(frame, detected_objects)
+            return detected_objects
+
+        # are there any new objects to track?
+        # - caclulate centre of bounding boxes 
+        # - calculate distance to any of the tracked objects
+        # - if distance is within a threshold then probably tracking same object and remove
+
 
         # build object locations based on tracking 
         tracked_objects = []
-        for tracker in self.tracking_objects: 
+        for tracker in self.object_trackers: 
             ok, location = tracker.update(frame)
             if ok:
-                print(location)
                 x, y, width, height = location
                 tracked_objects.append(
                     (int(x), int(y), int(x + width), int(y + height), "tracked_object"))
             else: 
-                print("FAILED TRACKING")
+                self.object_trackers.remove(tracker)
 
-        return tracked_objects
+        self.previous_detected_objects = tracked_objects
+        return self.previous_detected_objects
