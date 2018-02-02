@@ -37,12 +37,19 @@ class Tracker(Detector):
     def bounding_boxes_collide(self,
                                box1: Tuple[float, float, float, float],
                                box2: Tuple[float, float, float, float]) -> bool:
-        return False
+
+        box1_left_x, box1_bottom_y, box1_right_x, box1_top_y = box1
+        box2_left_x, box2_bottom_y, box2_right_x, box2_top_y = box2
+
+        return (box1_left_x < box2_right_x and
+                box1_right_x > box2_left_x and
+                box1_top_y > box2_bottom_y and
+                box1_bottom_y < box2_top_y)
 
     def intersection_over_union(self,
                                 box1: Tuple[float, float, float, float],
                                 box2: Tuple[float, float, float, float]) -> int: 
-        return 0
+        return 1
                 
 
     def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
@@ -78,23 +85,43 @@ class Tracker(Detector):
                 self.object_trackers.remove(tracker)
         
         new_objects = []
-        for detected_object in detected_objects: 
-            for tracked_object, tracker in zip(tracked_objects, self.object_trackers): 
+        for detected_object in detected_objects:
+
+            is_new_object_to_track = True
+
+            for tracked_object, tracker in zip(tracked_objects, self.object_trackers):
 
                 # if rectangles collide then lets see how much by
-                if self.bounding_boxes_collide(detected_object[:4], tracked_object): 
-                    collision_amount = self.intersection_over_union(detected_object[:4], tracked_object)
+                if self.bounding_boxes_collide(detected_object[:4], tracked_object[:4]):
+                    print("collided")
+                    collision_amount = self.intersection_over_union(detected_object[:4], tracked_object[:4])
                     
                     # if they breach theshold of collision, they are likely the same thing
                     # therefore take the detected object over tracker as source of truth
-                    if collision_amount > 0.5: 
+                    if collision_amount > 0.5:
                         self.object_trackers.remove(tracker)
-                        new_tracker = cv2.TrackerKCF_create()
-                        ok = new_tracker.init(frame, detected_object[:4])
-                        if not ok:
-                            self.object_trackers.remove(new_tracker)
-                            print("FAILED to init tracker")
-                            continue
-                        new_objects.append(detected_object)
 
-        return tracked_objects.extend(new_objects)
+                        if is_new_object_to_track: 
+                            is_new_object_to_track = False
+                            new_tracker = cv2.TrackerKCF_create()
+                            ok = new_tracker.init(frame, detected_object[:4])
+                            if not ok:
+                                self.object_trackers.remove(new_tracker)
+                                print("FAILED to init tracker")
+                                continue
+                            self.object_trackers.append(new_tracker)
+                            new_objects.append(detected_object)
+                
+            if is_new_object_to_track: 
+                new_tracker = cv2.TrackerKCF_create()
+                ok = new_tracker.init(frame, detected_object[:4])
+                if not ok:
+                    self.object_trackers.remove(new_tracker)
+                    print("FAILED to init tracker")
+                    break
+                self.object_trackers.append(new_tracker)
+                new_objects.append(detected_object)
+                
+
+        print(new_objects)
+        return tracked_objects + new_objects
