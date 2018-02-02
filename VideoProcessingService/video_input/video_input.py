@@ -7,12 +7,13 @@ from typing import Tuple
 from cv2 import VideoCapture
 from numpy import ndarray
 
+
 class VideoInputSource:
     """Represents a video input that can be read
     
     Gains access to local video source and allows frame by frame reading
     """
-    
+
     def open_source(self) -> bool:
         """Opens the video source to make it available
         
@@ -21,9 +22,9 @@ class VideoInputSource:
         Raises:
             NotImplementedError -- should be implemented in child classes
         """
-        
+
         raise NotImplementedError
-    
+
     def close_source(self) -> None:
         """Closes the source of this video input 
         
@@ -42,9 +43,9 @@ class VideoInputSource:
         Raises:
             NotImplementedError -- should be implemented in child classes
         """
-        
+
         raise NotImplementedError
-    
+
     def source_open(self) -> bool:
         """Returns true if the video source is currently open
         
@@ -53,8 +54,9 @@ class VideoInputSource:
         Raises:
             NotImplementedError -- should be implemented in child classes
         """
-        
+
         raise NotImplementedError
+
 
 class WebCamVideoInputSource(VideoInputSource):
     """Allows for live reading from a Web cam attathed to this device 
@@ -70,7 +72,7 @@ class WebCamVideoInputSource(VideoInputSource):
         Arguments:
             webcam_source: int {int} -- [the webcam ID, use -1 to use default] 
         """
-        
+
         self.webcam_source = webcam_source
         self.video_capture = None
 
@@ -91,9 +93,9 @@ class WebCamVideoInputSource(VideoInputSource):
         
         Releases opencv connection to webcam 
         """
-        
+
         self.video_capture.release()
-    
+
     def source_open(self) -> bool:
         """Returns whether opencv is currently reading from webcam
         
@@ -102,10 +104,10 @@ class WebCamVideoInputSource(VideoInputSource):
         Returns:
             [bool] -- [returns true if we are accessing the webcam, else false]
         """
-        
-        return self.video_capture.isOpened() 
-    
-    def get_next_frame(self) -> Tuple[bool, ndarray]: 
+
+        return self.video_capture.isOpened()
+
+    def get_next_frame(self) -> Tuple[bool, ndarray]:
         """Gets the next frame from the webcam
         
         Uses opencv to get the next available frame from the webcam source
@@ -113,17 +115,17 @@ class WebCamVideoInputSource(VideoInputSource):
         Returns:
             [bool, ndarray] -- [returns true and the frame if next frame available, else false and empty array]
         """
-        
+
         return self.video_capture.read()
+
 
 class LocalFileVideoSource(VideoInputSource):
     """Allows for reading from a local video file 
     
     Makes use of opencv to read frames from a local video file
     """
-    
 
-    def __init__(self, file_path: str) -> None: 
+    def __init__(self, file_path: str) -> None:
         """Initialises the local file video source to use the file_path specified
         
         The specified file_path should contain a local video format supported by opencv
@@ -131,7 +133,7 @@ class LocalFileVideoSource(VideoInputSource):
         Arguments:
             file_path: str {str} -- [path to local video file]
         """
-        
+
         self.video_file_path = file_path
         self.video_capture = None
 
@@ -143,7 +145,7 @@ class LocalFileVideoSource(VideoInputSource):
         Returns:
             [bool] -- [true if the file was opened successfully, else false]
         """
-        
+
         self.video_capture = VideoCapture(self.video_file_path)
         return True
 
@@ -152,7 +154,7 @@ class LocalFileVideoSource(VideoInputSource):
         
         Releases opencv connection on the video file 
         """
-        
+
         self.video_capture.release()
 
     def source_open(self) -> bool:
@@ -163,8 +165,8 @@ class LocalFileVideoSource(VideoInputSource):
         Returns:
             [bool] -- [returns true if we are accessing the video_file, else false]
         """
-        
-        return self.video_capture.isOpened() 
+
+        return self.video_capture.isOpened()
 
     def get_next_frame(self) -> Tuple[bool, ndarray]:
         """Gets the next frame from the video file being read
@@ -174,5 +176,5 @@ class LocalFileVideoSource(VideoInputSource):
         Returns:
             [bool, ndarray] -- [returns true and the frame if next frame available, else false and empty array]
         """
-        
+
         return self.video_capture.read()

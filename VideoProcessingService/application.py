@@ -5,6 +5,7 @@ Runs the application
 import cv2
 from video_pipeline.pipeline import VideoPipeline
 
+
 def start_application(video_pipeline: VideoPipeline):
     """Runs the application
     

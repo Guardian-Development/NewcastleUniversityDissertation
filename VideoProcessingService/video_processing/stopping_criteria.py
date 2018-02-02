@@ -2,6 +2,7 @@
 """
 import cv2
 
+
 class VideoProcessingStoppingCriteria:
     """Provides the ability to define custom stopping criterias
     """
@@ -14,6 +15,7 @@ class VideoProcessingStoppingCriteria:
         """
 
         raise NotImplementedError
+
 
 class QuitButtonPressedStoppingCriteria(VideoProcessingStoppingCriteria):
     """Provides a stopping criteria of the open_cv 'q' button being clicked
@@ -29,4 +31,3 @@ class QuitButtonPressedStoppingCriteria(VideoProcessingStoppingCriteria):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             return True
         return False
-        

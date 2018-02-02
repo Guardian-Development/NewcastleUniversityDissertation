@@ -8,12 +8,12 @@ import numpy as np
 import cv2
 from imutils.object_detection import non_max_suppression
 
+
 class Detector:
     """Detects a specific feature in an image
 
     Allows for generic detection to be made on an image represented as a numpy array
     """
-
 
     def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
         """Detects a feature within a numpy array 
@@ -30,12 +30,13 @@ class Detector:
         """
         raise NotImplementedError
 
+
 class PersonDetector(Detector):
     """Detects people within an image 
 
     Makes use of opencv to detect all people within an image
     """
-    
+
     def __init__(self):
         hog = cv2.HOGDescriptor()
         hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
@@ -53,7 +54,7 @@ class PersonDetector(Detector):
         Returns:
             [List[Tuple[float, float, float, float]]] -- [a list of coordinates that people are found at in the image]
         """
-        rectangles, weights = self.hog_detector.detectMultiScale(frame, winStride=(4,4), padding=(32,32), scale=1.05)
+        rectangles, weights = self.hog_detector.detectMultiScale(frame, winStride=(4, 4), padding=(32, 32), scale=1.05)
         rectangles = [r for (r, w) in zip(rectangles, weights) if w > 0.7]
 
         initial_people = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rectangles])
@@ -63,6 +64,7 @@ class PersonDetector(Detector):
                  x_plus_width.item(),
                  y_plus_height.item(),
                  "person") for (x, y, x_plus_width, y_plus_height) in final_detected_people]
+
 
 class CarDetector(Detector):
     """Detects cars within an image
@@ -79,7 +81,7 @@ class CarDetector(Detector):
             car_cascade_src: str {[str]} -- [the file path to the location of the car cascade xml configuration]
         """
         self.car_detector = cv2.CascadeClassifier(car_cascade_src)
-    
+
     def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
         """Detects cars within an image and returns a list of cars that are seen
 

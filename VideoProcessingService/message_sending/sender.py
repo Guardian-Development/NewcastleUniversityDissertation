@@ -6,6 +6,7 @@ from typing import Any, List, Tuple
 import json
 from kafka import KafkaProducer
 
+
 class MessageSender:
     """Provides the ability to send a message of any type
     """
@@ -20,6 +21,7 @@ class MessageSender:
             NotImplementedError -- should be implemented in child classes
         """
         raise NotImplementedError
+
 
 class ApacheKafkaMessageSender(MessageSender):
     """Provides the ability to send messages to an Apache Kafka server
@@ -37,7 +39,7 @@ class ApacheKafkaMessageSender(MessageSender):
         """
 
         self.producer = KafkaProducer(
-            bootstrap_servers=[server_address], 
+            bootstrap_servers=[server_address],
             value_serializer=lambda m: json.dumps(m).encode('ascii'),
             api_version=(0, 10, 1))
         self.topic = topic
@@ -56,6 +58,7 @@ class ApacheKafkaMessageSender(MessageSender):
         future = self.producer.send(self.topic, json_message)
         future.get(timeout=0.2)
 
+
 def convert_message_to_json(message: List[Tuple[float, float, float, float, str]]) -> str:
     """Converts a message in the form of a list of object locations to a json string
     
@@ -70,15 +73,15 @@ def convert_message_to_json(message: List[Tuple[float, float, float, float, str]
         [str] -- [the json representation of the list of objects]
     """
 
-    json_mesage = {}
+    json_message = {}
     built_objects = []
     for detected_object in message:
-        json_detected_object = {}
-        json_detected_object['x'] = detected_object[0]
-        json_detected_object['y'] = detected_object[1]
-        json_detected_object['x_plus_width'] = detected_object[2]
-        json_detected_object['y_plus_height'] = detected_object[3]
-        json_detected_object['type'] = detected_object[4]
+        json_detected_object = {
+            "x": detected_object[0],
+            "y": detected_object[1],
+            "x_plus_width": detected_object[2],
+            "y_plus_height": detected_object[3],
+            "type": detected_object[4]}
         built_objects.append(json_detected_object)
-    json_mesage['detected_objects'] = built_objects
-    return json_mesage
+    json_message["detected_objects"] = built_objects
+    return json_message

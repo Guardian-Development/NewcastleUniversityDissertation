@@ -3,9 +3,9 @@
 
 from typing import List, Tuple
 import cv2
-from math import hypot
 from numpy import ndarray
 from video_processing.detector import Detector
+
 
 class Tracker(Detector):
     """Allows tracking of objects through multiple frames
@@ -24,7 +24,7 @@ class Tracker(Detector):
         self.object_detectors = object_detectors
         self.object_trackers = []
 
-    def init_object_trackers(self, 
+    def init_object_trackers(self,
                              frame: ndarray,
                              detected_objects: List[Tuple[float, float, float, float, str]]) -> None:
         self.object_trackers = [cv2.TrackerKCF_create() for _ in detected_objects]
@@ -48,7 +48,7 @@ class Tracker(Detector):
 
     def intersection_over_union(self,
                                 box1: Tuple[float, float, float, float],
-                                box2: Tuple[float, float, float, float]) -> int: 
+                                box2: Tuple[float, float, float, float]) -> float:
         box1_left_x, box1_bottom_y, box1_right_x, box1_top_y = box1
         box2_left_x, box2_bottom_y, box2_right_x, box2_top_y = box2
 
@@ -59,14 +59,13 @@ class Tracker(Detector):
 
         intersection_area = (intersection_right_x - intersection_left_x + 1) * \
                             (intersection_top_y - intersection_bottom_y + 1)
-        
+
         box1_area = (box1_right_x - box1_left_x + 1) * \
                     (box1_top_y - box1_bottom_y + 1)
         box2_area = (box2_right_x - box2_left_x + 1) * \
                     (box2_top_y - box2_bottom_y + 1)
-        
+
         return intersection_area / float(box1_area + box2_area - intersection_area)
-                
 
     def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
         """Detects objects within a frame
@@ -81,9 +80,9 @@ class Tracker(Detector):
         """
 
         detected_objects = []
-        for detector in self.object_detectors: 
+        for detector in self.object_detectors:
             detected_objects.extend(detector.detect(frame))
-        
+
         # if we have never detected any objects before, init tracker for all
         if not self.object_trackers:
             self.init_object_trackers(frame, detected_objects)
@@ -91,15 +90,15 @@ class Tracker(Detector):
 
         # build object locations based on tracking 
         tracked_objects = []
-        for tracker in self.object_trackers: 
+        for tracker in self.object_trackers:
             ok, location = tracker.update(frame)
             if ok:
                 x, y, width, height = location
                 tracked_objects.append(
                     (int(x), int(y), int(x + width), int(y + height), "tracked_object"))
-            else: 
+            else:
                 self.object_trackers.remove(tracker)
-        
+
         new_objects = []
         for detected_object in detected_objects:
 
@@ -126,8 +125,8 @@ class Tracker(Detector):
                                 continue
                             self.object_trackers.append(new_tracker)
                             new_objects.append(detected_object)
-                
-            if is_new_object_to_track: 
+
+            if is_new_object_to_track:
                 print("didnt collide adding")
                 new_tracker = cv2.TrackerKCF_create()
                 ok = new_tracker.init(frame, detected_object[:4])

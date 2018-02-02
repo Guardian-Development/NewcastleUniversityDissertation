@@ -6,6 +6,7 @@ from typing import List, Tuple
 from numpy import ndarray
 import cv2
 
+
 class VideoOutput:
     """Allows output of information based on a frame and the objects detected within it
     """
@@ -23,6 +24,7 @@ class VideoOutput:
             NotImplementedError -- should be implemented in child classes
         """
         raise NotImplementedError
+
 
 class LocalDisplayVideoOutput(VideoOutput):
     """Displays the frame to screen with rectangles around detected objects using opencv

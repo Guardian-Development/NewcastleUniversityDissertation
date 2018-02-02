@@ -7,12 +7,12 @@ from numpy import ndarray
 import cv2
 from imutils import resize
 
+
 class FrameProcessor:
     """Processes an individual frame
 
     Provides access to process an individual frame returning a frame with the transform applied
     """
-
 
     def process_frame(self, frame: ndarray) -> ndarray:
         """Processes an individual frame returning the result as a new frame
@@ -25,6 +25,7 @@ class FrameProcessor:
         """
 
         raise NotImplementedError
+
 
 class BlackAndWhiteFrameProcessor(FrameProcessor):
     """Applies a black and white filter to the frame
@@ -43,6 +44,7 @@ class BlackAndWhiteFrameProcessor(FrameProcessor):
         """
 
         return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
 
 class ResizeFrameProcessor(FrameProcessor):
     """Resizes a frame to a given size
