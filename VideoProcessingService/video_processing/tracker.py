@@ -102,38 +102,22 @@ class Tracker(Detector):
         new_objects = []
         for detected_object in detected_objects:
 
-            is_new_object_to_track = True
+            is_new_object = True
 
             for tracked_object, tracker in zip(tracked_objects, self.object_trackers):
 
                 # if rectangles collide then lets see how much by
                 if self.bounding_boxes_collide(detected_object[:4], tracked_object[:4]):
                     collision_amount = self.intersection_over_union(detected_object[:4], tracked_object[:4])
-                    # if they breach theshold of collision, they are likely the same thing
-                    # therefore take the detected object over tracker as source of truth
-                    if collision_amount > 0.5:
-                        self.object_trackers.remove(tracker)
+                    if collision_amount > 0.07:
+                        is_new_object = False
+                        break
 
-                        if is_new_object_to_track:
-                            print("collided so adding")
-                            is_new_object_to_track = False
-                            new_tracker = cv2.TrackerKCF_create()
-                            ok = new_tracker.init(frame, detected_object[:4])
-                            if not ok:
-                                self.object_trackers.remove(new_tracker)
-                                print("FAILED to init tracker")
-                                continue
-                            self.object_trackers.append(new_tracker)
-                            new_objects.append(detected_object)
-
-            if is_new_object_to_track:
-                print("didnt collide adding")
+            if is_new_object:
                 new_tracker = cv2.TrackerKCF_create()
                 ok = new_tracker.init(frame, detected_object[:4])
                 if not ok:
-                    self.object_trackers.remove(new_tracker)
-                    print("FAILED to init tracker")
-                    break
+                    continue
                 self.object_trackers.append(new_tracker)
                 new_objects.append(detected_object)
 
