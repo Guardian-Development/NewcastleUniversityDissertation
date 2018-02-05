@@ -46,6 +46,17 @@ class Tracker(Detector):
                 box1_top_y > box2_bottom_y and
                 box1_bottom_y < box2_top_y)
 
+    def bounding_box_inclusive(self,
+                               box1: Tuple[float, float, float, float],
+                               box2: Tuple[float, float, float, float]) -> bool:
+        box1_left_x, box1_bottom_y, box1_right_x, box1_top_y = box1
+        box2_left_x, box2_bottom_y, box2_right_x, box2_top_y = box2
+
+        return (box1_left_x <= box2_left_x and
+                box1_right_x <= box2_right_x and
+                box1_top_y <= box2_top_y and
+                box1_bottom_y <= box2_bottom_y)
+
     def intersection_over_union(self,
                                 box1: Tuple[float, float, float, float],
                                 box2: Tuple[float, float, float, float]) -> float:
@@ -109,8 +120,16 @@ class Tracker(Detector):
                 # if rectangles collide then lets see how much by
                 if self.bounding_boxes_collide(detected_object[:4], tracked_object[:4]):
                     collision_amount = self.intersection_over_union(detected_object[:4], tracked_object[:4])
-                    if collision_amount > 0.07:
+                    if collision_amount > 0.03:
                         is_new_object = False
+                        tracked_objects.remove(tracked_object)
+                        self.object_trackers.remove(tracker)
+                        new_tracker = cv2.TrackerKCF_create()
+                        ok = new_tracker.init(frame, detected_object[:4])
+                        if not ok:
+                            continue
+                        self.object_trackers.append(new_tracker)
+                        new_objects.append(detected_object)
                         break
 
             if is_new_object:
@@ -120,5 +139,13 @@ class Tracker(Detector):
                     continue
                 self.object_trackers.append(new_tracker)
                 new_objects.append(detected_object)
+
+        # check if a tracked object is inclusive of another, remove the least specific object
+        for tracked_object, tracker in zip(tracked_objects, self.object_trackers):
+            for new_object in new_objects:
+                if self.bounding_box_inclusive(new_object[:4], tracked_object[:4]):
+                    tracked_objects.remove(tracked_object)
+                    self.object_trackers.remove(tracker)
+                    break
 
         return tracked_objects + new_objects
