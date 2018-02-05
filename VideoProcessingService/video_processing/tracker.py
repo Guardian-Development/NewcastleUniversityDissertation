@@ -24,16 +24,6 @@ class Tracker(Detector):
         self.object_detectors = object_detectors
         self.object_trackers = []
 
-    def init_object_trackers(self,
-                             frame: ndarray,
-                             detected_objects: List[Tuple[float, float, float, float, str]]) -> None:
-        self.object_trackers = [cv2.TrackerKCF_create() for _ in detected_objects]
-        for tracker, detected_object in zip(self.object_trackers, detected_objects):
-            ok = tracker.init(frame, detected_object[:4])
-            if not ok:
-                self.object_trackers.remove(tracker)
-                print("FAILED to init tracker")
-
     def bounding_boxes_collide(self,
                                box1: Tuple[float, float, float, float],
                                box2: Tuple[float, float, float, float]) -> bool:
@@ -41,10 +31,10 @@ class Tracker(Detector):
         box1_left_x, box1_bottom_y, box1_right_x, box1_top_y = box1
         box2_left_x, box2_bottom_y, box2_right_x, box2_top_y = box2
 
-        return (box1_left_x < box2_right_x and
-                box1_right_x > box2_left_x and
-                box1_top_y > box2_bottom_y and
-                box1_bottom_y < box2_top_y)
+        return (box1_left_x <= box2_right_x and
+                box1_right_x >= box2_left_x and
+                box1_top_y >= box2_bottom_y and
+                box1_bottom_y <= box2_top_y)
 
     def bounding_box_inclusive(self,
                                box1: Tuple[float, float, float, float],
@@ -90,16 +80,45 @@ class Tracker(Detector):
             [List[Tuple[float, float, float, float]]] -- [a list of coordinates that people are found at in the image]
         """
 
+        # get the detected objects in the frame
         detected_objects = []
         for detector in self.object_detectors:
             detected_objects.extend(detector.detect(frame))
 
-        # if we have never detected any objects before, init tracker for all
-        if not self.object_trackers:
-            self.init_object_trackers(frame, detected_objects)
-            return detected_objects
+        # update trackers to get latest locations of objects we know about
+        tracked_objects = self.get_tracked_object_locations(frame)
 
-        # build object locations based on tracking 
+        # calculate which objects are new from the detected objects
+        new_objects = []
+        for detected_object in detected_objects:
+            is_new_object = True
+
+            # can we find something we already track that shows this is not new
+            for tracked_object, tracker in zip(tracked_objects, self.object_trackers):
+
+                if self.bounding_boxes_collide(detected_object[:4], tracked_object[:4]):
+                    collision_amount = self.intersection_over_union(detected_object[:4], tracked_object[:4])
+                    print("{0}, {1}, collision={2}".format(detected_object, tracked_object, collision_amount))
+                    if collision_amount > 0.2:
+                        is_new_object = False
+                        break
+
+            if is_new_object:
+                new_tracker = cv2.TrackerMIL_create()
+                ok = new_tracker.init(frame, (
+                    detected_object[0],
+                    detected_object[1],
+                    detected_object[2] - detected_object[0],
+                    detected_object[3] - detected_object[1]))
+                if not ok:
+                    continue
+                self.object_trackers.append(new_tracker)
+                new_objects.append(detected_object)
+
+        tracked_objects.extend(new_objects)
+        return tracked_objects
+
+    def get_tracked_object_locations(self, frame) -> List[Tuple[float, float, float, float, str]]:
         tracked_objects = []
         for tracker in self.object_trackers:
             ok, location = tracker.update(frame)
@@ -109,43 +128,4 @@ class Tracker(Detector):
                     (int(x), int(y), int(x + width), int(y + height), "tracked_object"))
             else:
                 self.object_trackers.remove(tracker)
-
-        new_objects = []
-        for detected_object in detected_objects:
-
-            is_new_object = True
-
-            for tracked_object, tracker in zip(tracked_objects, self.object_trackers):
-
-                # if rectangles collide then lets see how much by
-                if self.bounding_boxes_collide(detected_object[:4], tracked_object[:4]):
-                    collision_amount = self.intersection_over_union(detected_object[:4], tracked_object[:4])
-                    if collision_amount > 0.03:
-                        is_new_object = False
-                        tracked_objects.remove(tracked_object)
-                        self.object_trackers.remove(tracker)
-                        new_tracker = cv2.TrackerKCF_create()
-                        ok = new_tracker.init(frame, detected_object[:4])
-                        if not ok:
-                            continue
-                        self.object_trackers.append(new_tracker)
-                        new_objects.append(detected_object)
-                        break
-
-            if is_new_object:
-                new_tracker = cv2.TrackerKCF_create()
-                ok = new_tracker.init(frame, detected_object[:4])
-                if not ok:
-                    continue
-                self.object_trackers.append(new_tracker)
-                new_objects.append(detected_object)
-
-        # check if a tracked object is inclusive of another, remove the least specific object
-        for tracked_object, tracker in zip(tracked_objects, self.object_trackers):
-            for new_object in new_objects:
-                if self.bounding_box_inclusive(new_object[:4], tracked_object[:4]):
-                    tracked_objects.remove(tracked_object)
-                    self.object_trackers.remove(tracker)
-                    break
-
-        return tracked_objects + new_objects
+        return tracked_objects

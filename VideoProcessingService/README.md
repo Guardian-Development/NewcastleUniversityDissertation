@@ -71,3 +71,4 @@ To see messages published to topic in console:
     - https://www.youtube.com/watch?v=hTUyzF4v9KA
     - https://www.youtube.com/watch?v=YwbP3Z30gUY
     - https://www.youtube.com/watch?v=Y1jTEyb3wiI
+    - http://www.robots.ox.ac.uk/ActiveVision/Research/Projects/2009bbenfold_headpose/project.html#datasets

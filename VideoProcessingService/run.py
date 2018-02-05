@@ -26,10 +26,9 @@ if __name__ == '__main__':
         PIPELINE = VideoPipelineBuilder(LocalFileVideoSource(ARGUMENTS.filelocation))
 
     PIPELINE = \
-        PIPELINE.with_frame_processing_stage(ResizeFrameProcessor(width=400, height=400))\
+        PIPELINE.with_frame_processing_stage(ResizeFrameProcessor(width=500, height=500))\
                 .with_video_processing_stage(Tracker([
-                        PersonDetector(),
-                        CarDetector(car_cascade_src="video_processing/detection_models/car_cascade.xml"),
+                        PersonDetector()
                     ]))\
                 .with_video_output_stage(LocalDisplayVideoOutput())\
                 .with_processing_stopping_criteria(QuitButtonPressedStoppingCriteria())
