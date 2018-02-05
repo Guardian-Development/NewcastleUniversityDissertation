@@ -1,4 +1,9 @@
 from typing import Tuple
+from collections import namedtuple
+
+BoundingBox = namedtuple(
+    "BoundingBox",
+    "x_position y_position width height item_type")
 
 
 def bounding_boxes_collide(box1: Tuple[float, float, float, float],
