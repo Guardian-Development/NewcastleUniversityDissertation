@@ -1,8 +1,10 @@
 from collections import namedtuple
 
-BoundingBox = namedtuple(
-    "BoundingBox",
-    "x_position y_position width height item_type")
+
+class BoundingBox(namedtuple('BoundingBox',
+                             ["x_position", "y_position", "width", "height", "item_type", "uuid"])):
+    def __new__(cls, x_position, y_position, width, height, item_type, uuid=None):
+        return super(BoundingBox, cls).__new__(cls, x_position, y_position, width, height, item_type, uuid)
 
 
 def bounding_boxes_collide(box1: BoundingBox, box2: BoundingBox) -> bool:
@@ -41,9 +43,11 @@ def intersection_over_union(box1: BoundingBox, box2: BoundingBox) -> float:
 
 def convert_to_dict(box: BoundingBox) -> dict:
     json_detected_object = {
-        "x_position": box.x_position,
-        "y_position": box.y_position,
-        "width": box.width,
-        "height": box.height,
-        "type": box.item_type}
+        "uuid": str(box.uuid),
+        "x_position": int(box.x_position),
+        "y_position": int(box.y_position),
+        "width": int(box.width),
+        "height": int(box.height),
+        "type": str(box.item_type)
+    }
     return json_detected_object

@@ -2,10 +2,14 @@
 """
 
 from typing import List
+from collections import namedtuple
 import cv2
+import uuid
 from numpy import ndarray
 from video_processing.detector import Detector
 from support.bounding_box import BoundingBox, bounding_boxes_collide, intersection_over_union
+
+TrackingData = namedtuple("TrackingData", "uuid item_type")
 
 
 class Tracker(Detector):
@@ -47,7 +51,10 @@ class Tracker(Detector):
         tracked_objects.extend(new_objects)
         return tracked_objects
 
-    def detect_new_objects_and_track(self, detected_objects, frame, tracked_objects) -> List[BoundingBox]:
+    def detect_new_objects_and_track(self,
+                                     detected_objects: List[BoundingBox],
+                                     frame: ndarray,
+                                     tracked_objects: List[BoundingBox]) -> List[BoundingBox]:
         new_objects = []
 
         for detected_object in detected_objects:
@@ -64,30 +71,35 @@ class Tracker(Detector):
             if is_new_object:
                 could_track = self.initialise_tracker_for_object(frame, detected_object)
                 if could_track:
-                    new_objects.append(detected_object)
-
+                    new_objects.append(
+                        BoundingBox(detected_object.x_position,
+                                    detected_object.y_position,
+                                    detected_object.width,
+                                    detected_object.height,
+                                    detected_object.item_type,
+                                    uuid.uuid4()))
         return new_objects
 
     def initialise_tracker_for_object(self, frame: ndarray, detected_object: BoundingBox) -> bool:
         new_tracker = cv2.TrackerMIL_create()
-        ok = new_tracker.init(frame, (
-            detected_object.x_position,
-            detected_object.y_position,
-            detected_object.width,
-            detected_object.height))
+        ok = new_tracker.init(frame,
+                              (detected_object.x_position,
+                               detected_object.y_position,
+                               detected_object.width,
+                               detected_object.height))
         if not ok:
             return False
 
-        self.object_trackers.append(new_tracker)
+        self.object_trackers.append((new_tracker, TrackingData(uuid.uuid4(), detected_object.item_type)))
         return True
 
     def get_tracked_object_locations(self, frame) -> List[BoundingBox]:
         tracked_objects = []
-        for tracker in self.object_trackers:
+        for tracker, tracking_data in self.object_trackers:
             ok, location = tracker.update(frame)
             if ok:
                 x, y, width, height = location
-                tracked_objects.append(BoundingBox(x, y, width, height, "tracked_object"))
+                tracked_objects.append(BoundingBox(x, y, width, height, tracking_data.item_type, tracking_data.uuid))
             else:
-                self.object_trackers.remove(tracker)
+                self.object_trackers.remove((tracker, tracking_data))
         return tracked_objects

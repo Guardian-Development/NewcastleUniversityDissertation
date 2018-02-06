@@ -92,5 +92,5 @@ class CarDetector(Detector):
         initial_cars = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rectangles])
         final_cars = non_max_suppression(initial_cars, probs=None, overlapThresh=0.1)
 
-        return [BoundingBox(x, y, x_plus_width - x, y_plus_height - y)
+        return [BoundingBox(x, y, x_plus_width - x, y_plus_height - y, "car")
                 for (x, y, x_plus_width, y_plus_height) in final_cars]

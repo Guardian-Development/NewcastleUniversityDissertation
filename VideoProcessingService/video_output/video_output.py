@@ -37,7 +37,8 @@ class LocalDisplayVideoOutput(VideoOutput):
             frame: ndarray {[ndarray]} -- [the frame that has been processed]
             detected_objects: List[BoundingBox] -- [the list of detected objects within the frame]
         """
-        for x, y, width, height, item_type in detected_objects:
+        print(detected_objects)
+        for x, y, width, height, item_type, _ in detected_objects:
             colour = (0, 255, 0)
             cv2.rectangle(frame, (int(x), int(y)), (int(x + width), int(y + height)), colour, 2)
         cv2.imshow('Video', frame)
