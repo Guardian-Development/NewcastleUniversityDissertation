@@ -1,5 +1,4 @@
-"""Parses command line arguments
-
+"""
 Parses command line arguments to build applications configuration
 """
 import argparse
@@ -8,7 +7,8 @@ from enum import Enum
 
 
 class VideoProcessingType(Enum):
-    """Provides video processing types, such as webcam and file
+    """
+    Provides video processing types, such as webcam and file
     """
     webcam = 'cam'
     file = 'file'
@@ -18,10 +18,10 @@ class VideoProcessingType(Enum):
 
 
 def process_command_line_arguments() -> Namespace:
-    """Processes command line arguments to build valid program configuration
-     
-     Returns:
-            [Namespace] -- [object with simple properties for each command line argument]
+    """
+    Processes command line arguments to build valid program configuration
+
+    :return: object with simple properties for each command line argument
     """
 
     parser = build_parser()
@@ -40,10 +40,10 @@ def process_command_line_arguments() -> Namespace:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Builds up the command line parser options
-    
-    Returns:
-        [argparse.ArgumentParser] -- [The built command line parser]
+    """
+    Builds up the command line parser options
+
+    :return: The built command line parser
     """
 
     parser = argparse.ArgumentParser(

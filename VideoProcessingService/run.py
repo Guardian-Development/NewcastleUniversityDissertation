@@ -1,12 +1,12 @@
-"""Entry point for the application to start
-
+"""
+Entry point for the application to start
 Responsible for starting the application correctly based on the command line arguments passed
 """
 from command_line_procesor import process_command_line_arguments, VideoProcessingType
 from application import start_application
 from video_pipeline.pipeline import VideoPipelineBuilder
 from video_input.video_input import WebCamVideoInputSource, LocalFileVideoSource
-from video_processing.frame_processing import ResizeFrameProcessor, BlackAndWhiteFrameProcessor
+from video_processing.frame_processing import ResizeFrameProcessor
 from video_processing.detector import CarDetector, PersonDetector
 from video_processing.tracker import Tracker
 from video_processing.stopping_criteria import QuitButtonPressedStoppingCriteria
@@ -14,7 +14,8 @@ from video_output.video_output import LocalDisplayVideoOutput
 from message_sending.sender import ApacheKafkaMessageSender
 
 if __name__ == '__main__':
-    """Parses command line input, and starts the video processing pipeline
+    """
+    Parses command line input, and starts the video processing pipeline
     """
 
     ARGUMENTS = process_command_line_arguments()
