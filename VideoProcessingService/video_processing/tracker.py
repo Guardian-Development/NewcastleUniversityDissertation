@@ -1,11 +1,11 @@
 """Provides object tracking capabilities through multiple frames
 """
 
-from typing import List, Tuple
+from typing import List
 import cv2
 from numpy import ndarray
 from video_processing.detector import Detector
-from support import bounding_box as bb
+from support.bounding_box import BoundingBox, bounding_boxes_collide, intersection_over_union
 
 
 class Tracker(Detector):
@@ -25,7 +25,7 @@ class Tracker(Detector):
         self.object_detectors = object_detectors
         self.object_trackers = []
 
-    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
+    def detect(self, frame: ndarray) -> List[BoundingBox]:
         """Detects objects within a frame
 
         Uses the object_detectors to find objects, allowing it to track them in future frames
@@ -34,7 +34,7 @@ class Tracker(Detector):
             frame: ndarray {[ndarray]} -- [the frame you wish to detect objects within]
 
         Returns:
-            [List[Tuple[float, float, float, float]]] -- [a list of coordinates that people are found at in the image]
+            [List[BoundingBox]] -- [a list of coordinates that people are found at in the image]
         """
 
         detected_objects = []
@@ -47,10 +47,7 @@ class Tracker(Detector):
         tracked_objects.extend(new_objects)
         return tracked_objects
 
-    def detect_new_objects_and_track(self,
-                                     detected_objects,
-                                     frame,
-                                     tracked_objects) -> List[Tuple[float, float, float, float, str]]:
+    def detect_new_objects_and_track(self, detected_objects, frame, tracked_objects) -> List[BoundingBox]:
         new_objects = []
 
         for detected_object in detected_objects:
@@ -58,8 +55,8 @@ class Tracker(Detector):
 
             # can we find something we already track that shows this is not new
             for tracked_object in tracked_objects:
-                if bb.bounding_boxes_collide(detected_object[:4], tracked_object[:4]):
-                    collision_amount = bb.intersection_over_union(detected_object[:4], tracked_object[:4])
+                if bounding_boxes_collide(detected_object, tracked_object):
+                    collision_amount = intersection_over_union(detected_object, tracked_object)
                     if collision_amount > 0.2:
                         is_new_object = False
                         break
@@ -71,29 +68,26 @@ class Tracker(Detector):
 
         return new_objects
 
-    def initialise_tracker_for_object(self,
-                                      frame: ndarray,
-                                      detected_object: Tuple[float, float, float, float]) -> bool:
+    def initialise_tracker_for_object(self, frame: ndarray, detected_object: BoundingBox) -> bool:
         new_tracker = cv2.TrackerMIL_create()
         ok = new_tracker.init(frame, (
-            detected_object[0],
-            detected_object[1],
-            detected_object[2] - detected_object[0],
-            detected_object[3] - detected_object[1]))
+            detected_object.x_position,
+            detected_object.y_position,
+            detected_object.width,
+            detected_object.height))
         if not ok:
             return False
 
         self.object_trackers.append(new_tracker)
         return True
 
-    def get_tracked_object_locations(self, frame) -> List[Tuple[float, float, float, float, str]]:
+    def get_tracked_object_locations(self, frame) -> List[BoundingBox]:
         tracked_objects = []
         for tracker in self.object_trackers:
             ok, location = tracker.update(frame)
             if ok:
                 x, y, width, height = location
-                tracked_objects.append(
-                    (int(x), int(y), int(x + width), int(y + height), "tracked_object"))
+                tracked_objects.append(BoundingBox(x, y, width, height, "tracked_object"))
             else:
                 self.object_trackers.remove(tracker)
         return tracked_objects

@@ -2,11 +2,12 @@
 
 Makes use of open_cv to detect features in an image
 """
-from typing import List, Tuple
+from typing import List
 from numpy import ndarray
 import numpy as np
 import cv2
 from imutils.object_detection import non_max_suppression
+from support.bounding_box import BoundingBox
 
 
 class Detector:
@@ -15,12 +16,10 @@ class Detector:
     Allows for generic detection to be made on an image represented as a numpy array
     """
 
-    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
+    def detect(self, frame: ndarray) -> List[BoundingBox]:
         """Detects a feature within a numpy array 
         
-        Returns the list of locations in the image the feature occurs 
-        Returns the x and y coordinates of the bottom left corner, then the x + width and y + height
-        Returns coordinate along with the str type of this detected object
+        Returns the list of locations in the image the feature occurs
         
         Arguments:
             frame: ndarray {[ndarray]} -- [the image to detect features within]
@@ -42,7 +41,7 @@ class PersonDetector(Detector):
         hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
         self.hog_detector = hog
 
-    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
+    def detect(self, frame: ndarray) -> List[BoundingBox]:
         """Detects people in an image and returns a list of people that are seen
 
         Makes use of opencv hog model with an SVM detector to find the people
@@ -52,18 +51,16 @@ class PersonDetector(Detector):
             frame: ndarray {[ndarray]} -- The image to detect people in
         
         Returns:
-            [List[Tuple[float, float, float, float]]] -- [a list of coordinates that people are found at in the image]
+            List[BoundingBox] -- [a list of coordinates that people are found at in the image]
         """
         rectangles, weights = self.hog_detector.detectMultiScale(frame, winStride=(4, 4), padding=(32, 32), scale=1.05)
         rectangles = [r for (r, w) in zip(rectangles, weights) if w > 0.7]
 
         initial_people = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rectangles])
         final_detected_people = non_max_suppression(initial_people, probs=None, overlapThresh=0.65)
-        return [(x.item(),
-                 y.item(),
-                 x_plus_width.item(),
-                 y_plus_height.item(),
-                 "person") for (x, y, x_plus_width, y_plus_height) in final_detected_people]
+
+        return [BoundingBox(x, y, x_plus_width - x, y_plus_height - y, "person")
+                for (x, y, x_plus_width, y_plus_height) in final_detected_people]
 
 
 class CarDetector(Detector):
@@ -82,7 +79,7 @@ class CarDetector(Detector):
         """
         self.car_detector = cv2.CascadeClassifier(car_cascade_src)
 
-    def detect(self, frame: ndarray) -> List[Tuple[float, float, float, float, str]]:
+    def detect(self, frame: ndarray) -> List[BoundingBox]:
         """Detects cars within an image and returns a list of cars that are seen
 
         It uses a pre-made car cascade model and uses the open_cv CascadeClassifier
@@ -94,8 +91,6 @@ class CarDetector(Detector):
 
         initial_cars = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rectangles])
         final_cars = non_max_suppression(initial_cars, probs=None, overlapThresh=0.1)
-        return [(x.item(),
-                 y.item(),
-                 x_plus_width.item(),
-                 y_plus_height.item(),
-                 "car") for (x, y, x_plus_width, y_plus_height) in final_cars]
+
+        return [BoundingBox(x, y, x_plus_width - x, y_plus_height - y)
+                for (x, y, x_plus_width, y_plus_height) in final_cars]

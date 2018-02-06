@@ -1,4 +1,3 @@
-from typing import Tuple
 from collections import namedtuple
 
 BoundingBox = namedtuple(
@@ -6,10 +5,11 @@ BoundingBox = namedtuple(
     "x_position y_position width height item_type")
 
 
-def bounding_boxes_collide(box1: Tuple[float, float, float, float],
-                           box2: Tuple[float, float, float, float]) -> bool:
-    box1_left_x, box1_bottom_y, box1_right_x, box1_top_y = box1
-    box2_left_x, box2_bottom_y, box2_right_x, box2_top_y = box2
+def bounding_boxes_collide(box1: BoundingBox, box2: BoundingBox) -> bool:
+    box1_left_x, box1_bottom_y, box1_right_x, box1_top_y = \
+        (box1.x_position, box1.y_position, box1.x_position + box1.width, box1.y_position + box1.height)
+    box2_left_x, box2_bottom_y, box2_right_x, box2_top_y = \
+        (box2.x_position, box2.y_position, box2.x_position + box2.width, box2.y_position + box2.height)
 
     return (box1_left_x <= box2_right_x and
             box1_right_x >= box2_left_x and
@@ -17,10 +17,11 @@ def bounding_boxes_collide(box1: Tuple[float, float, float, float],
             box1_bottom_y <= box2_top_y)
 
 
-def intersection_over_union(box1: Tuple[float, float, float, float],
-                            box2: Tuple[float, float, float, float]) -> float:
-    box1_left_x, box1_bottom_y, box1_right_x, box1_top_y = box1
-    box2_left_x, box2_bottom_y, box2_right_x, box2_top_y = box2
+def intersection_over_union(box1: BoundingBox, box2: BoundingBox) -> float:
+    box1_left_x, box1_bottom_y, box1_right_x, box1_top_y = \
+        (box1.x_position, box1.y_position, box1.x_position + box1.width, box1.y_position + box1.height)
+    box2_left_x, box2_bottom_y, box2_right_x, box2_top_y = \
+        (box2.x_position, box2.y_position, box2.x_position + box2.width, box2.y_position + box2.height)
 
     intersection_left_x = max(box1_left_x, box2_left_x)
     intersection_bottom_y = max(box1_bottom_y, box2_bottom_y)
@@ -36,3 +37,13 @@ def intersection_over_union(box1: Tuple[float, float, float, float],
                 (box2_top_y - box2_bottom_y + 1)
 
     return intersection_area / float(box1_area + box2_area - intersection_area)
+
+
+def convert_to_dict(box: BoundingBox) -> dict:
+    json_detected_object = {
+        "x_position": box.x_position,
+        "y_position": box.y_position,
+        "width": box.width,
+        "height": box.height,
+        "type": box.item_type}
+    return json_detected_object

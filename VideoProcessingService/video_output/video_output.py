@@ -2,8 +2,9 @@
 
 Allow output of various formats based on the items detected in an image
 """
-from typing import List, Tuple
+from typing import List
 from numpy import ndarray
+from support.bounding_box import BoundingBox
 import cv2
 
 
@@ -11,14 +12,12 @@ class VideoOutput:
     """Allows output of information based on a frame and the objects detected within it
     """
 
-    def produce_output(self, frame: ndarray, detected_objects: List[Tuple[float, float, float, float, str]]) -> None:
+    def produce_output(self, frame: ndarray, detected_objects: List[BoundingBox]) -> None:
         """Produces the desired output based on the frame and detected objects within it
         
         Arguments:
             frame: ndarray {[ndarray]} -- [the frame that has been processed]
-            detected_objects: List[Tuple[float, float, float, float, str]]
-                -- the x and y coordinates of the bottom left corner, then the x + width and y + height
-                   the str is the name of the detected object type
+            detected_objects: List[BoundingBox] -- [the list of detected objects within the frame]
         
         Raises:
             NotImplementedError -- should be implemented in child classes
@@ -29,23 +28,16 @@ class VideoOutput:
 class LocalDisplayVideoOutput(VideoOutput):
     """Displays the frame to screen with rectangles around detected objects using opencv
 
-    Different colours are used for different types
     """
 
-    def produce_output(self, frame: ndarray, detected_objects: List[Tuple[float, float, float, float, str]]) -> None:
-        """Places rectangles around all detected objects, colouring them by type 
-
-        Supported types are: 
-            person - colour green 
-            car - colour blue
+    def produce_output(self, frame: ndarray, detected_objects: List[BoundingBox]) -> None:
+        """Places rectangles around all detected objects
         
         Arguments:
             frame: ndarray {[ndarray]} -- [the frame that has been processed]
-            detected_objects: List[Tuple[float, float, float, float, str]]
-                -- the x and y coordinates of the bottom left corner, then the x + width and y + height
-                   the str is the name of the detected object type
+            detected_objects: List[BoundingBox] -- [the list of detected objects within the frame]
         """
-        for (x, y, x_plus_width, y_plus_height, event_type) in detected_objects:
-            colour = (0, 255, 0) if event_type == "person" else (0, 0, 255)
-            cv2.rectangle(frame, (x, y), (x_plus_width, y_plus_height), colour, 2)
+        for x, y, width, height, item_type in detected_objects:
+            colour = (0, 255, 0)
+            cv2.rectangle(frame, (int(x), int(y)), (int(x + width), int(y + height)), colour, 2)
         cv2.imshow('Video', frame)
