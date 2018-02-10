@@ -7,9 +7,10 @@ The production infrastructure required to run Apache Kafka publicly on AWS.
     - https://www.terraform.io/downloads.html
 
 ## To Run 
-1. In the current directory: terraform plan (params)
-2. terraform apply (params)
+1. Create a secret.tfvars file in the current directory. This should include youe access_key and secret_key for AWS. (format: key = "key_value")
+1. In the current directory: terraform plan (params) -var-file="secret.tfvars"
+2. terraform apply (params) -var-file="secret.tfvars"
 
 ## To Destroy
-1. In the current directory: terraform plan -destroy (params)
-2. terraform destroy (params)
+1. In the current directory: terraform plan -destroy (params) -var-file="secret.tfvars"
+2. terraform destroy (params) -var-file="secret.tfvars"

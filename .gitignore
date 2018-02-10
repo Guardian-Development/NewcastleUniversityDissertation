@@ -37,12 +37,11 @@ dist
 *.iml
 
 # Terraform
-local-variables.tfvar
+secret.tfvars
 *.tfstate
 *.tfstate.backup
 .terraform/
 terraform
-local-variables.tfvars
 
 .vscode
 
