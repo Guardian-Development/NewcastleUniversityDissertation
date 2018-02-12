@@ -44,13 +44,14 @@ resource "aws_instance" "kafka" {
     provisioner "remote-exec"{
         inline = [
             "sudo apt-get -q -y update",
-            "sudo apt-get -q -y upgrade",
             "sudo apt-get -q -y install default-jre",
             "wget http://mirrors.ukfast.co.uk/sites/ftp.apache.org/kafka/1.0.0/kafka_2.11-1.0.0.tgz",
             "tar -xzf kafka_2.11-1.0.0.tgz",
-            "cd kafka_2.11-1.0.0",
-            "bin/zookeeper-server-start.sh config/zookeeper.properties > ~/zookeeper-logs &",
-            "bin/kafka-server-start.sh config/server.properties > ~/kafka-logs &"
+            "cd kafka_2.11-1.0.0/",
+            # "export KAFKA_HEAP_OPTS=\"-Xmx500M -Xmx500M\"",
+            # "source ~\\.bashrc",
+            "bin/zookeeper-server-start.sh config/zookeeper.properties &",
+            "bin/kafka-server-start.sh config/server.properties &"
         ]
 
         connection {
