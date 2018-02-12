@@ -70,7 +70,21 @@ resource "aws_instance" "kafka" {
         Name = "Kafka-Instance"
     }
 
-    provisioner "remote-exec"{
+    # for this to work we need the IP of the box as the advertised.listeners=PLAINTEXT://IP:9092
+    # find a way to interpolate and start with that IP
+    provisioner "file" {
+        source = "./kafka_configuration/kafka_server_properties.txt"
+        destination = "~/kafka_server_properties.txt"
+
+        connection {
+            type = "ssh"
+            timeout = "5m"
+            user = "ubuntu"
+            private_key = "${file(var.kafka_secret_key_file_path)}"
+        }
+    }
+
+    provisioner "remote-exec" {
         inline = [
             "sudo apt-get -q -y update",
             "sudo apt-get -q -y install default-jre",
@@ -81,7 +95,7 @@ resource "aws_instance" "kafka" {
             "nohup kafka_2.11-1.0.0/bin/zookeeper-server-start.sh kafka_2.11-1.0.0/config/zookeeper.properties > ~/zookeeper-logs &",
             "sleep 5s",
             "echo 'Starting Kafka'",
-            "nohup kafka_2.11-1.0.0/bin/kafka-server-start.sh kafka_2.11-1.0.0/config/server.properties > ~/kafka-logs &",
+            "nohup kafka_2.11-1.0.0/bin/kafka-server-start.sh ~/kafka_server_properties.txt > ~/kafka-logs &",
             "sleep 5s",
             "echo 'Complete Setup'"
         ]
