@@ -2,7 +2,7 @@ broker.id=0
 
 num.network.threads=3
 num.io.threads=8
-advertised.listeners=PLAINTEXT://:9092
+advertised.listeners=PLAINTEXT://${kafka_public_ip}:9092
 
 socket.send.buffer.bytes=102400
 socket.receive.buffer.bytes=102400
