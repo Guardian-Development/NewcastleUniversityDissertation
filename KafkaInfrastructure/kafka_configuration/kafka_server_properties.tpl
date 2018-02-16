@@ -1,8 +1,8 @@
-broker.id=0
+broker.id=${broker_id}
 
 num.network.threads=3
 num.io.threads=8
-advertised.listeners=PLAINTEXT://${kafka_public_ip}:9092
+advertised.listeners=PLAINTEXT://${kafka_public_ip}:${kafka_port}
 
 socket.send.buffer.bytes=102400
 socket.receive.buffer.bytes=102400
@@ -21,7 +21,7 @@ offsets.topic.replication.factor=1
 transaction.state.log.replication.factor=1
 transaction.state.log.min.isr=1
 
-zookeeper.connect=localhost:2181
+zookeeper.connect=${zookeeper_connection_url}
 zookeeper.connection.timeout.ms=6000
 
 group.initial.rebalance.delay.ms=0

@@ -1,5 +1,5 @@
 # Security group to allow SSH onto a machine 
-resource "aws_security_group" "kafka-ssh" {
+resource "aws_security_group" "ec2-ssh" {
     name = "Kafka SSH Group"
 
     # Allow port 22 (ssh) connections from any address
@@ -16,7 +16,7 @@ resource "aws_security_group" "kafka-ssh" {
 }
 
 # Security group to allow all outgoing network traffic
-resource "aws_security_group" "kafka-outgoing-traffic" {
+resource "aws_security_group" "ec2-outgoing-traffic" {
     name = "Kafka All Outgoing Group"
 
     egress {
@@ -32,7 +32,7 @@ resource "aws_security_group" "kafka-outgoing-traffic" {
 }
 
 # Security group to allow all incoming network traffic
-resource "aws_security_group" "kafka-incoming-traffic" {
+resource "aws_security_group" "ec2-incoming-traffic" {
     name = "Kafka All Incoming Group"
 
     ingress {
