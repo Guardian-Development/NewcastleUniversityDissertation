@@ -69,7 +69,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-k",
         "--kafkaurl",
-        help="The Kafka url you wish to publish messages to",
+        help="The Kafka urls you wish to publish messages to (comma separated list)",
         type=str,
         default=None
     )

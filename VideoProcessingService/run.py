@@ -37,6 +37,6 @@ if __name__ == '__main__':
                
     if ARGUMENTS.kafkaurl is not None and ARGUMENTS.kafkatopic is not None:
         PIPELINE = PIPELINE.with_message_sender(ApacheKafkaMessageSender(
-            server_address=ARGUMENTS.kafkaurl, topic=ARGUMENTS.kafkatopic))
+            server_address=ARGUMENTS.kafkaurl.split(","), topic=ARGUMENTS.kafkatopic))
 
     start_application(PIPELINE.build())

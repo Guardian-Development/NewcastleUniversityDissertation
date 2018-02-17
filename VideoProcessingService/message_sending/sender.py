@@ -27,7 +27,7 @@ class ApacheKafkaMessageSender(MessageSender):
     Provides the ability to send messages to an Apache Kafka topic
     """
 
-    def __init__(self, server_address: str, topic: str):
+    def __init__(self, server_address: List[str], topic: str):
         """
         Initialises this message sender for a given topic
 
@@ -35,7 +35,7 @@ class ApacheKafkaMessageSender(MessageSender):
         :param topic: the topic name you wish to send to
         """
         self.producer = KafkaProducer(
-            bootstrap_servers=[server_address],
+            bootstrap_servers=server_address,
             value_serializer=lambda m: json.dumps(m).encode('ascii'),
             api_version=(0, 10, 1))
         self.topic = topic
