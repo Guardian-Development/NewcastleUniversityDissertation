@@ -42,6 +42,7 @@ secret.tfvars
 *.tfstate.backup
 .terraform/
 terraform
+*.pem
 
 .vscode
 
