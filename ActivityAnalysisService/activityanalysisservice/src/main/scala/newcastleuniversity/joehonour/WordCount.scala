@@ -1,52 +1,45 @@
 package newcastleuniversity.joehonour
 
-/**
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import org.apache.flink.api.scala._
 
-/**
- * Implements the "WordCount" program that computes a simple word occurrence histogram
- * over some sample data
- *
- * This example shows how to:
- *
- *   - write a simple Flink program.
- *   - use Tuple data types.
- *   - write and use user-defined functions.
- */
+import scala.io.Source
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
+
+case class DetectedObject(`type`: String,
+                          uuid: String,
+                          y_position: Double,
+                          x_position: Double,
+                          width: Double,
+                          height: Double)
+
+case class Frame(detected_objects: List[DetectedObject])
+case class Messages(ordered_messages: List[Frame])
+
 object WordCount {
+
+  implicit val formats: DefaultFormats.type = DefaultFormats
+
   def main(args: Array[String]) {
 
-    // set up the execution environment
+    // read and parse file
+    val raw_file_source = Source
+        .fromFile("../test_json_files/2018-03-02__test_video_one.json")
+        .mkString
+
+    val json_result = parse(raw_file_source)
+    val parsedResult = json_result.extract[Messages]
+
+
+    // run count on how many frames each uuid appeared
     val env = ExecutionEnvironment.getExecutionEnvironment
-
-    // get input data
-    val text = env.fromElements("To be, or not to be,--that is the question:--",
-      "Whether 'tis nobler in the mind to suffer", "The slings and arrows of outrageous fortune",
-      "Or to take arms against a sea of troubles,")
-
-    val counts = text.flatMap { _.toLowerCase.split("\\W+") }
-      .map { (_, 1) }
+    val flinkSource = env.fromCollection(parsedResult.ordered_messages)
+    val counts = flinkSource
+      .flatMap { _.detected_objects }
+      .map { v => (v.uuid, 1) }
       .groupBy(0)
       .sum(1)
 
-    // execute and print result
     counts.print()
   }
 }
