@@ -29,7 +29,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Kafka support tool that writes a Kafka topic to file in json format")
     parser.add_argument(
         "kafkaurl",
-        help="The Kafka connection url to connect to",
+        help="The Kafka urls you wish to publish messages to (comma separated list)",
         type=str
     )
     parser.add_argument(
