@@ -48,8 +48,12 @@ class ApacheKafkaMessageSender(MessageSender):
         :return: None
         """
         json_message = convert_bounding_box_to_dict(information)
-        future = self.producer.send(self.topic, json_message)
-        future.get(timeout=0.2)
+
+        try:
+            future = self.producer.send(self.topic, json_message)
+            future.get(timeout=0.5)
+        except Exception: 
+            print("Exception with Kafka occured")
 
 
 def convert_bounding_box_to_dict(objects: List[BoundingBox]) -> dict:
