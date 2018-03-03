@@ -21,7 +21,7 @@ lazy val root = (project in file(".")).
     libraryDependencies ++= jsonParsingDependencies
   )
 
-mainClass in assembly := Some("newcastleuniversity.joehonour.WordCount")
+mainClass in assembly := Some("newcastleuniversity.joehonour.Main")
 
 // make run command include the provided dependencies
 run in Compile := Defaults.runTask(fullClasspath in Compile,
