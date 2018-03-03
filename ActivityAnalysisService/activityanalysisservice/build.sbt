@@ -8,6 +8,7 @@ val flinkVersion = "1.4.1"
 val flinkDependencies = Seq(
   "org.apache.flink" %% "flink-scala" % flinkVersion % "provided",
   "org.apache.flink" %% "flink-streaming-scala" % flinkVersion % "provided")
+  //"org.apache.flink" %% "flink-connector-kafka" % flinkVersion)
 
 val jsonParsingDependencies = Seq(
   "org.json4s" %% "json4s-native" % "3.6.0-M2",
