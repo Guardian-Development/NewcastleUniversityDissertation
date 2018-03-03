@@ -42,4 +42,9 @@ From within the activityanalysisservice folder run:
     - sbt clean assembly (from within project folder)
 2. Submit job to flink: 
     - flink-1.4.1/bin/flink run path-to-fat-jar (command line options)
+3. To see job running visit: 
+    - localhost:8081
+
+To view stdout from the flink task running:
+- tail -f flink-1.4.1/log/flink*-taskmanager-*.out
 
