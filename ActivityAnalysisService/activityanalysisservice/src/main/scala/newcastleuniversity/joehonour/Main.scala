@@ -5,6 +5,7 @@ import java.util.Properties
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import org.apache.flink.streaming.api.windowing.time.Time
 
 import scala.io.Source
 import org.json4s._
@@ -26,25 +27,31 @@ object Main {
 
   def main(args: Array[String]) {
 
-    val propertiesFile = ParameterTool.fromArgs(args).getRequired("properties-file")
-    val properties = ParameterTool.fromPropertiesFile(propertiesFile)
-
-    val bootstrapServers = properties.getRequired("kafka.bootstrap.servers")
-    val kafkaTopic = properties.getRequired("kafka.topic")
-
-    val kafkaProperties = new Properties()
-    kafkaProperties.setProperty("bootstrapServers", bootstrapServers)
+    val configuration = CommandLineParser.parseCommandLineArguments(args)
 
     val env = StreamExecutionEnvironment.getExecutionEnvironment
+    val raw_file_source = Source
+      .fromFile("../test_json_files/2018-03-02__test_video_one.json")
+      .mkString
+    val json_result = parse(raw_file_source)
+    val parsedResult = json_result.extract[Messages]
+    val source = env.fromCollection(parsedResult.ordered_messages)
+
+    val count = source
+      .flatMap { _.detected_objects }
+        .map { obj => (obj.uuid, 1)}
+        .keyBy { _._1 }
+        .sum(1)
+
+    count.print()
+
+    env.execute("Test flink job")
+
     //env.addSource(new FlinkKafkaConsumer081(kafkaTopic, new SimpleStringSchema(), kafkaProperties))
 
     // run count on how many frames each uuid appeared
     // read and parse file
-//    val raw_file_source = Source
-//      .fromFile("../test_json_files/2018-03-02__test_video_one.json")
-//      .mkString
-//    val json_result = parse(raw_file_source)
-//    val parsedResult = json_result.extract[Messages]
+
 //
 //    val flinkSource = env.fromCollection(parsedResult.ordered_messages)
 //    val counts = flinkSource
