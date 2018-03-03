@@ -36,3 +36,10 @@ From within the activityanalysisservice folder run:
 ### IntelliJ
 - Edit Configurations -> Add Configuration -> sbt Task 
 - Then enter into Tasks: clean run
+
+## Running in Flink Cluster
+1. Build project into fat jar
+    - sbt clean assembly (from within project folder)
+2. Submit job to flink: 
+    - flink-1.4.1/bin/flink run path-to-fat-jar (command line options)
+
