@@ -1,24 +1,26 @@
-package newcastleuniversity.joehonour.movement_detection
+package newcastleuniversity.joehonour.movement_detection.detectors
 
 import newcastleuniversity.joehonour.messages.DetectedObject
 import newcastleuniversity.joehonour.movement_detection.aggregators.MovementObjectDisplacementAggregator
+import newcastleuniversity.joehonour.movement_detection.movements.DetectedMovement
 import newcastleuniversity.joehonour.movement_detection.objects.{MovementObject, PositionalObject, PositionalObjectProducer}
 import org.apache.flink.api.common.functions.AggregateFunction
-import org.apache.flink.cep.scala.{CEP, PatternStream}
+import org.apache.flink.api.common.typeinfo.TypeInformation
+import org.apache.flink.cep.scala.CEP
 import org.apache.flink.cep.scala.pattern.Pattern
-import org.apache.flink.streaming.api.scala.DataStream
-import org.apache.flink.streaming.api.scala._
+import org.apache.flink.streaming.api.scala.{DataStream, _}
+import org.apache.flink.util.Collector
 
 object MovementDetector {
 
-  def builder(detectorName: String): MovementDetectorBuilder = {
+  def builder(detectorName: () => String): MovementDetectorBuilder = {
     new MovementDetectorBuilder(detectorName)
   }
 
 }
 
 
-class MovementDetectorBuilder(val detectorName: String) {
+class MovementDetectorBuilder(val detectorName: () => String) {
 
   private var typeIdentifier: Option[String] = Option.empty
   private var windowSize: Long = 10
@@ -44,7 +46,7 @@ class MovementDetectorBuilder(val detectorName: String) {
   }
 
   def objectDisplacementIdentifyingRange(minimum: Double, maximum: Double) : MovementDetectorBuilder = {
-    objectDisplacementRangePattern = Pattern.begin[MovementObject](detectorName)
+    objectDisplacementRangePattern = Pattern.begin[MovementObject](detectorName())
       .where { person => person.displacement >= minimum }
       .where { person => person.displacement <= maximum }
     this
@@ -55,15 +57,25 @@ class MovementDetectorBuilder(val detectorName: String) {
     this
   }
 
-  def buildDetectionStream(dataStream: DataStream[DetectedObject]) : PatternStream[MovementObject] = {
+  def buildDetectionStream[T <: DetectedMovement](dataStream: DataStream[DetectedObject],
+                                                  converter: (Iterable[MovementObject]) => T)(implicit evidence: TypeInformation[T]): DataStream[T] = {
 
     val positionOfObject = convertObjectToPositionalObjectStream(dataStream)
     val movementCalculationsOfObject = aggregateObjectMovementsWithinWindow(positionOfObject)
     val movementPattern = createMovementPatternDetector()
 
-    CEP.pattern(
+    val pattern = CEP.pattern(
       movementCalculationsOfObject.keyBy { _.uuid },
       movementPattern)
+
+    val keyForObjects = detectorName()
+
+    pattern.flatSelect{
+      (objects: collection.Map[String, Iterable[MovementObject]], collector: Collector[T]) => {
+        val objectsContributingToPattern = objects(keyForObjects)
+        collector.collect(converter(objectsContributingToPattern))
+      }
+    }
   }
 
   private def convertObjectToPositionalObjectStream(dataStream: DataStream[DetectedObject]) = {
