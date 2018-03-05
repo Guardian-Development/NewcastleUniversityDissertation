@@ -4,10 +4,11 @@ import java.util.Properties
 
 import newcastleuniversity.joehonour.messages.DetectedObject
 import newcastleuniversity.joehonour.movement_detection.aggregators.MovementObjectDisplacementAggregator
+import newcastleuniversity.joehonour.movement_detection.detectors.MovementDetector
 import newcastleuniversity.joehonour.movement_detection.movements.WalkingMovement
 import org.apache.flink.streaming.api.scala.{DataStream, _}
 
-package object detectors {
+object Detectors {
 
   def walkingDetectionStreamFrom(dataStream: DataStream[DetectedObject], properties: Properties) : DataStream[WalkingMovement] = {
     walkingDetectionStreamFrom(

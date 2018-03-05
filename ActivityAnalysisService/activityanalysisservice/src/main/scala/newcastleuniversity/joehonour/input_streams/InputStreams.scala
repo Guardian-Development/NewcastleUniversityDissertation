@@ -6,10 +6,10 @@ import newcastleuniversity.joehonour.messages.Frame
 import newcastleuniversity.joehonour.messages.deserializers.JsonFrameDeserializer
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011
 
-package object input_streams {
+object InputStreams {
 
   def kafkaStreamForFrameMessageTopic(properties: Properties): FlinkKafkaConsumer011[Frame] = {
-    kafkaStreamForFrameMessageTopic(properties.getProperty("kafka.topic"), properties)
+    kafkaStreamForFrameMessageTopic(properties.getProperty("kafka.video.frame.topic"), properties)
   }
 
   def kafkaStreamForFrameMessageTopic(topicName: String, properties: Properties): FlinkKafkaConsumer011[Frame] = {

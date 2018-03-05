@@ -1,10 +1,9 @@
 package newcastleuniversity.joehonour
 
-import newcastleuniversity.joehonour.messages.Frame
-import newcastleuniversity.joehonour.movement_detection.detectors._
-import newcastleuniversity.joehonour.input_streams._
+import newcastleuniversity.joehonour.messages.MovementObserved
+import newcastleuniversity.joehonour.movement_detection.Detectors
+import newcastleuniversity.joehonour.output_streams.OutputStreams
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011
 
 object Main {
 
@@ -15,14 +14,24 @@ object Main {
 
     //build data source
     val env = StreamExecutionEnvironment.getExecutionEnvironment
-    val kafkaSource: FlinkKafkaConsumer011[Frame] = kafkaStreamForFrameMessageTopic(properties)
 
     //run detections
-    val sourceOfDetectedObjects = env.addSource(kafkaSource)
-        .flatMap { _.detected_objects }
+    val sourceOfDetectedObjects = env
+      .addSource(InputStreams.kafkaStreamForFrameMessageTopic(properties))
+      .flatMap { _.detected_objects }
 
-    walkingDetectionStreamFrom(sourceOfDetectedObjects, properties)
-      .print()
+    //walking detector
+    Detectors
+      .walkingDetectionStreamFrom(sourceOfDetectedObjects, properties)
+      .map { walkingMovement => MovementObserved(
+        walkingMovement.uuid,
+        walkingMovement.movement_type,
+        walkingMovement.fromLocationX,
+        walkingMovement.fromLocationY,
+        walkingMovement.toLocationX,
+        walkingMovement.toLocationY,
+        walkingMovement.averageDisplacement) }
+      .addSink(OutputStreams.kafkaStreamForMovementObservedMessageTopic(properties))
 
     env.execute("detection-walking-task")
   }
