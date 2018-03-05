@@ -8,7 +8,7 @@ import newcastleuniversity.joehonour.movement_detection.detectors.MovementDetect
 import newcastleuniversity.joehonour.movement_detection.movements.WalkingMovement
 import org.apache.flink.streaming.api.scala.{DataStream, _}
 
-object Detectors {
+object WalkingDetectors {
 
   def walkingDetectionStreamFrom(dataStream: DataStream[DetectedObject], properties: Properties) : DataStream[WalkingMovement] = {
     walkingDetectionStreamFrom(
@@ -28,7 +28,7 @@ object Detectors {
                                  displacementMin: Double,
                                  displacementMax: Double,
                                  repetitionTrigger: Int): DataStream[WalkingMovement] = {
-    MovementDetector.builder{ () => "person-detector" }
+    MovementDetector.builder{ () => "person-walking-detector" }
       .objectTypeIdentifier(itemType)
       .activityWindow(windowSize, windowSlide)
       .displacementAggregator(new MovementObjectDisplacementAggregator)
