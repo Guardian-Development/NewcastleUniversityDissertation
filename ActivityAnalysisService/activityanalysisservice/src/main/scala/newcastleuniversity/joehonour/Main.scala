@@ -5,11 +5,20 @@ import java.util.Properties
 import newcastleuniversity.joehonour.messages.deserializers.JsonFrameDeserializer
 import newcastleuniversity.joehonour.movement_detection.MovementDetector
 import newcastleuniversity.joehonour.movement_detection.aggregators.MovementObjectDisplacementAggregator
-import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import newcastleuniversity.joehonour.movement_detection.movements.WalkingMovement
+import newcastleuniversity.joehonour.movement_detection.objects.MovementObject
+import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011
-import org.apache.flink.streaming.api.scala._
+import org.apache.flink.util.Collector
 
 object Main {
+
+
+  def collectWalkingActivityResult(movementObjects: collection.Map[String, Iterable[MovementObject]],
+                                   movementActivity: Collector[WalkingMovement]): Unit = {
+    val objectsPartOfTheActivity = movementObjects("person-detector")
+    movementActivity.collect(WalkingMovement.buildWalkingMovementFrom(objectsPartOfTheActivity))
+  }
 
   def main(args: Array[String]) {
 
@@ -33,17 +42,15 @@ object Main {
 
     MovementDetector.builder("person-detector")
       .objectTypeIdentifier("person")
-      .activityWindow(10, 2)
+      .activityWindow(10, 5)
       .displacementAggregator(new MovementObjectDisplacementAggregator)
-      .objectDisplacementIdentifyingRange(0.2, 1.0)
+      .objectDisplacementIdentifyingRange(1.0, 2.0)
       .activityRepetitionToTrigger(5)
       .buildDetectionStream(sourceOfDetectedObjects)
-      .flatSelect( (map, collector) => {
-        val detections = map("person-detector")
-        val uuid = detections.head.uuid
-        val averageDisplacement = detections.map { _.displacement }.sum
-        //TODO: collect result here!
-      })
+      .flatSelect{(objects: collection.Map[String, Iterable[MovementObject]], collector: Collector[WalkingMovement]) =>
+        val objectsPartOfTheActivity = objects("person-detector")
+        collector.collect(WalkingMovement.buildWalkingMovementFrom(objectsPartOfTheActivity))
+      }
       .print()
 
     env.execute("Test flink job")
