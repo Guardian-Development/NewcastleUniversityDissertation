@@ -32,7 +32,7 @@ ssh-keygen -t rsa -P ""
 
 //upload key to machines
 scp -i flink-key-pair.pem /home/joe/.ssh/id_rsa.pub ubuntu@JOB-IP:~/.ssh/id_rsa.pub
-scp -i flink-key-pair.pem /home/joe/.ssh/id_rsa.pub ubuntu@JOB-IP:~/.ssh/id_rsa
+scp -i flink-key-pair.pem /home/joe/.ssh/id_rsa ubuntu@JOB-IP:~/.ssh/id_rsa
 scp -i flink-key-pair.pem /home/joe/.ssh/id_rsa.pub ubuntu@TASK-IP:~/.ssh/id_rsa.pub
 
 (Task Machine)
@@ -45,3 +45,10 @@ cat id_rsa.pub >> authorized_keys
 //set correct permission on job machine to use the key
 chmod 700 id_rsa
 flink-1.4.1/bin/start-cluster.sh
+
+# TOD0
+find out why start cluster doesnt work remotly 
+Potentially need to add SSH config to task managers
+works when manually call
+cleanup readme with instructions
+add the running of a task in the cluster
