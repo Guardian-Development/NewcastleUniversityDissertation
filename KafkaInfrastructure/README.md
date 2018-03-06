@@ -8,7 +8,7 @@ The production infrastructure required to run Apache Kafka publicly on AWS. Sets
     - https://www.terraform.io/downloads.html
 - You must have created a key pair for SSH connectivity to the ec2 instances
     - https://console.aws.amazon.com/ec2/
-    - You must store the private ket locally on the machine for Terraform to use it to configure the ec2 instances.
+    - You must store the private key locally on the machine for Terraform to use it to configure the ec2 instances.
 
 ## To Run
 
