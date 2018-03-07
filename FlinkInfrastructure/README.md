@@ -46,9 +46,13 @@ cat id_rsa.pub >> authorized_keys
 chmod 700 id_rsa
 flink-1.4.1/bin/start-cluster.sh
 
+
+RUNNING A JOB
+- sbt clean assembly 
+- look for the jar path that was created
+- ./flink run --jobmanager job-manager-ip:6123 jarfilepath --properties-file properties-file
+
+
 # TOD0
-find out why start cluster doesnt work remotly 
-Potentially need to add SSH config to task managers
-works when manually call
-cleanup readme with instructions
 add the running of a task in the cluster
+cleanup readme with instructions

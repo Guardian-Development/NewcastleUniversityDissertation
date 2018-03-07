@@ -94,7 +94,7 @@ resource "null_resource" "flink-job-manager-1-configure" {
 
     provisioner "remote-exec" {
         inline = [
-            "nohup flink-1.4.1/bin/start-cluster.sh &",
+            "nohup flink-1.4.1/bin/start-cluster.sh > ~/flink-logs &",
             "sleep 5s",
             "echo 'Running Apache Flink'"
         ]
