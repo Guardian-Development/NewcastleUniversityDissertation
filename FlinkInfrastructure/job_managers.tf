@@ -14,8 +14,3 @@ resource "aws_instance" "flink-job-manager-1" {
         Name = "Flink-Job-Manager-1"
     }
 }
-
-# Public IP of Flink JobManager 1 EC2 instance
-resource "aws_eip" "flink-job-manager-1-public-ip" {
-  instance = "${aws_instance.flink-job-manager-1.id}"
-}

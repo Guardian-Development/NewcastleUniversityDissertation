@@ -16,7 +16,7 @@ resource "null_resource" "flink-job-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-job-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-job-manager-1.public_ip}"
         }
     }
     provisioner "file" {
@@ -28,7 +28,7 @@ resource "null_resource" "flink-job-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-job-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-job-manager-1.public_ip}"
         }
     }
     provisioner "file" {
@@ -40,7 +40,7 @@ resource "null_resource" "flink-job-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-job-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-job-manager-1.public_ip}"
         }
     }
 
@@ -62,7 +62,7 @@ resource "null_resource" "flink-job-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-job-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-job-manager-1.public_ip}"
         }
     }
 
@@ -75,7 +75,7 @@ resource "null_resource" "flink-job-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-job-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-job-manager-1.public_ip}"
         }
     }
 
@@ -88,14 +88,15 @@ resource "null_resource" "flink-job-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-job-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-job-manager-1.public_ip}"
         }
     }
 
     provisioner "remote-exec" {
         inline = [
+            "sleep 10s",
             "nohup flink-1.4.1/bin/start-cluster.sh > ~/flink-logs &",
-            "sleep 5s",
+            "sleep 10s",
             "echo 'Running Apache Flink'"
         ]
         
@@ -104,7 +105,7 @@ resource "null_resource" "flink-job-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-job-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-job-manager-1.public_ip}"
         }
     }
 }

@@ -2,7 +2,7 @@
 data "template_file" "flink-config" {
     template = "${file("./flink_configuration/flink_configuration.tpl")}"
     vars {
-        job_manager = "${aws_eip.flink-job-manager-1-public-ip.public_ip}"
+        job_manager = "${aws_instance.flink-job-manager-1.public_ip}"
     }
 }
 
@@ -10,8 +10,8 @@ data "template_file" "flink-config" {
 data "template_file" "flink-slaves-config" {
     template = "${file("./flink_configuration/slaves_configuration.tpl")}"
     vars {
-        slave_1 = "${aws_eip.flink-task-manager-1-public-ip.public_ip}"
-        slave_2 = "${aws_eip.flink-task-manager-2-public-ip.public_ip}"
+        slave_1 = "${aws_instance.flink-task-manager-1.public_ip}"
+        slave_2 = "${aws_instance.flink-task-manager-2.public_ip}"
     }
 }
 

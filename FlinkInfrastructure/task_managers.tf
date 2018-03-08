@@ -15,11 +15,6 @@ resource "aws_instance" "flink-task-manager-1" {
     }
 }
 
-# Public IP of Flink TaskManager 1 EC2 instance
-resource "aws_eip" "flink-task-manager-1-public-ip" {
-    instance = "${aws_instance.flink-task-manager-1.id}"
-}
-
 # Flink TaskManager 2
 resource "aws_instance" "flink-task-manager-2" {
     # 16.04 LTS, amd64, hvm:ebs-ssd 
@@ -35,9 +30,4 @@ resource "aws_instance" "flink-task-manager-2" {
     tags {
         Name = "Flink-Task-Manager-2"
     }
-}
-
-# Public IP of Flink TaskManager 2 EC2 instance
-resource "aws_eip" "flink-task-manager-2-public-ip" {
-    instance = "${aws_instance.flink-task-manager-2.id}"
 }

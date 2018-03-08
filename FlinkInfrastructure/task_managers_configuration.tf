@@ -15,7 +15,7 @@ resource "null_resource" "flink-task-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-task-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-task-manager-1.public_ip}"
         }
     }
 
@@ -39,7 +39,7 @@ resource "null_resource" "flink-task-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-task-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-task-manager-1.public_ip}"
         }
     }
 
@@ -52,7 +52,7 @@ resource "null_resource" "flink-task-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-task-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-task-manager-1.public_ip}"
         }
     }
 
@@ -65,7 +65,7 @@ resource "null_resource" "flink-task-manager-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-task-manager-1-public-ip.public_ip}"
+            host = "${aws_instance.flink-task-manager-1.public_ip}"
         }
     }
 }
@@ -87,7 +87,7 @@ resource "null_resource" "flink-task-manager-2-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-task-manager-2-public-ip.public_ip}"
+            host = "${aws_instance.flink-task-manager-2.public_ip}"
         }
     }
 
@@ -111,7 +111,7 @@ resource "null_resource" "flink-task-manager-2-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-task-manager-2-public-ip.public_ip}"
+            host = "${aws_instance.flink-task-manager-2.public_ip}"
         }
     }
 
@@ -124,7 +124,7 @@ resource "null_resource" "flink-task-manager-2-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-task-manager-2-public-ip.public_ip}"
+            host = "${aws_instance.flink-task-manager-2.public_ip}"
         }
     }
 
@@ -137,7 +137,7 @@ resource "null_resource" "flink-task-manager-2-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.flink-task-manager-2-public-ip.public_ip}"
+            host = "${aws_instance.flink-task-manager-2.public_ip}"
         }
     }
 }
