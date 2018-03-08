@@ -1,24 +1,20 @@
 package newcastleuniversity.joehonour
 
+import newcastleuniversity.joehonour.input_streams.InputStreams
 import org.apache.flink.api.scala._
+import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 
-object WordCount {
+object Main {
   def main(args: Array[String]) {
 
-    // set up the execution environment
-    val env = ExecutionEnvironment.getExecutionEnvironment
+    val properties = CommandLineParser.parseCommandLineArguments(args)
+    val env = StreamExecutionEnvironment.getExecutionEnvironment
 
-    // get input data
-    val text = env.fromElements("To be, or not to be,--that is the question:--",
-      "Whether 'tis nobler in the mind to suffer", "The slings and arrows of outrageous fortune",
-      "Or to take arms against a sea of troubles,")
+    val sourceOfActivities = env
+      .addSource(InputStreams.kafkaStreamForDetectedActivitiesMessageTopic(properties))
 
-    val counts = text.flatMap { _.toLowerCase.split("\\W+") }
-      .map { (_, 1) }
-      .groupBy(0)
-      .sum(1)
+    sourceOfActivities.print()
 
-    // execute and print result
-    counts.print()
+    env.execute("anomaly-detection-task")
   }
 }

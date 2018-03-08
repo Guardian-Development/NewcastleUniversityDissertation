@@ -1,0 +1,220 @@
+{
+    "ordered_messages": [
+        {
+            "average_displacement": 0.2153501814672975,
+            "from_position_x": 159.5,
+            "to_position_y": 106.5,
+            "from_position_y": 109.5,
+            "to_position_x": 158.5,
+            "movement_type": "parked",
+            "uuid": "0f4d1165-bb07-49cd-9389-49b8d2df4a20"
+        },
+        {
+            "average_displacement": 1.5292970398769037,
+            "from_position_x": 51.0,
+            "to_position_y": 142.0,
+            "from_position_y": 145.0,
+            "to_position_x": 65.0,
+            "movement_type": "walking",
+            "uuid": "c6907fa8-ec1d-420d-9e50-510aa67b364f"
+        },
+        {
+            "average_displacement": 1.469083467762487,
+            "from_position_x": 45.5,
+            "to_position_y": 121.5,
+            "from_position_y": 117.5,
+            "to_position_x": 63.5,
+            "movement_type": "walking",
+            "uuid": "5e27b012-a618-412a-b168-7def39d21eb9"
+        },
+        {
+            "average_displacement": 0.15148507524172472,
+            "from_position_x": 441.5,
+            "to_position_y": 185.5,
+            "from_position_y": 186.5,
+            "to_position_x": 438.5,
+            "movement_type": "parked",
+            "uuid": "f8fc665f-f6e4-430d-99d1-12d2f17e058d"
+        },
+        {
+            "average_displacement": 1.4258184606450617,
+            "from_position_x": 82.0,
+            "to_position_y": 103.5,
+            "from_position_y": 100.5,
+            "to_position_x": 96.0,
+            "movement_type": "walking",
+            "uuid": "d12c5259-1f80-45dc-953d-ba227fdf413f"
+        },
+        {
+            "average_displacement": 3.5556880698261653,
+            "from_position_x": 309.5,
+            "to_position_y": 176.5,
+            "from_position_y": 177.5,
+            "to_position_x": 372.5,
+            "movement_type": "driving",
+            "uuid": "f8fc665f-f6e4-430d-99d1-12d2f17e058d"
+        },
+        {
+            "average_displacement": 1.4212769701831367,
+            "from_position_x": 461.5,
+            "to_position_y": 97.0,
+            "from_position_y": 105.0,
+            "to_position_x": 442.5,
+            "movement_type": "walking",
+            "uuid": "37b52977-b487-49af-80de-7d2f263ff37d"
+        },
+        {
+            "average_displacement": 0.20405929983502757,
+            "from_position_x": 159.5,
+            "to_position_y": 107.5,
+            "from_position_y": 109.5,
+            "to_position_x": 159.5,
+            "movement_type": "parked",
+            "uuid": "0f4d1165-bb07-49cd-9389-49b8d2df4a20"
+        },
+        {
+            "average_displacement": 0.21977772981853033,
+            "from_position_x": 159.5,
+            "to_position_y": 107.5,
+            "from_position_y": 109.5,
+            "to_position_x": 159.5,
+            "movement_type": "parked",
+            "uuid": "0f4d1165-bb07-49cd-9389-49b8d2df4a20"
+        },
+        {
+            "average_displacement": 1.457651572245261,
+            "from_position_x": 63.0,
+            "to_position_y": 133.0,
+            "from_position_y": 130.0,
+            "to_position_x": 82.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.4637427957143856,
+            "from_position_x": 63.0,
+            "to_position_y": 137.0,
+            "from_position_y": 130.0,
+            "to_position_x": 88.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.5412418736199534,
+            "from_position_x": 66.0,
+            "to_position_y": 137.0,
+            "from_position_y": 129.0,
+            "to_position_x": 88.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.4022238379268825,
+            "from_position_x": 63.0,
+            "to_position_y": 137.0,
+            "from_position_y": 130.0,
+            "to_position_x": 91.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.4565532432169386,
+            "from_position_x": 66.0,
+            "to_position_y": 137.0,
+            "from_position_y": 129.0,
+            "to_position_x": 91.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.4175636799482465,
+            "from_position_x": 70.0,
+            "to_position_y": 137.0,
+            "from_position_y": 132.0,
+            "to_position_x": 91.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.3599940789171243,
+            "from_position_x": 63.0,
+            "to_position_y": 139.0,
+            "from_position_y": 130.0,
+            "to_position_x": 96.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.4005293178786355,
+            "from_position_x": 66.0,
+            "to_position_y": 139.0,
+            "from_position_y": 129.0,
+            "to_position_x": 96.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.3587006942650082,
+            "from_position_x": 70.0,
+            "to_position_y": 139.0,
+            "from_position_y": 132.0,
+            "to_position_x": 96.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.3053012691359014,
+            "from_position_x": 76.0,
+            "to_position_y": 139.0,
+            "from_position_y": 133.0,
+            "to_position_x": 96.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.3452501116164666,
+            "from_position_x": 63.0,
+            "to_position_y": 139.0,
+            "from_position_y": 130.0,
+            "to_position_x": 100.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.3788754497952067,
+            "from_position_x": 66.0,
+            "to_position_y": 139.0,
+            "from_position_y": 129.0,
+            "to_position_x": 100.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.339928934114465,
+            "from_position_x": 70.0,
+            "to_position_y": 139.0,
+            "from_position_y": 132.0,
+            "to_position_x": 100.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.2923007864817853,
+            "from_position_x": 76.0,
+            "to_position_y": 139.0,
+            "from_position_y": 133.0,
+            "to_position_x": 100.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        },
+        {
+            "average_displacement": 1.280934520765542,
+            "from_position_x": 82.0,
+            "to_position_y": 139.0,
+            "from_position_y": 133.0,
+            "to_position_x": 100.0,
+            "movement_type": "walking",
+            "uuid": "3091332b-e7f3-4dfc-b7b6-df8f5fbb6c42"
+        }
+    ]
+}
