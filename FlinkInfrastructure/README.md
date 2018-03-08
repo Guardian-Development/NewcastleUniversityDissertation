@@ -1,6 +1,6 @@
 # Activity Analysis Infrastructure
 
-The production infrastructure required to run Apache Flink with the activityanalysisservice tasks publicly on AWS. 
+The production infrastructure required to run Apache Flink publicly on AWS. 
 
 ## Requirements
 
@@ -13,7 +13,7 @@ The production infrastructure required to run Apache Flink with the activityanal
 ## To Run
 
 1. You need to create an RSA key that can be used by the machines within the flink cluster to communicate with passwordless SSH. 
-    - run: ssh-keygen -t rsa -P ""
+    - On your local machine run: ssh-keygen -t rsa -P ""
     - Take note of where the 2 key files were generated: id_rsa (private key) and id_rsa.pub (public key)
     - Use the full path names including the file name for the variables: flink_rsa_private_key_file_path, flink_rsa_public_key_file_path respectively
 2. Run: terraform init
