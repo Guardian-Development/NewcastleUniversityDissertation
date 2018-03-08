@@ -3,9 +3,9 @@ data "template_file" "kafka-broker-1-config" {
     template = "${file("./kafka_configuration/kafka_server_properties.tpl")}"
     vars {
         broker_id = "0"
-        kafka_public_ip = "${aws_eip.kafka-broker-1-public-ip.public_ip}"
+        kafka_public_ip = "${aws_instance.kafka-broker-1.public_ip}"
         kafka_port = "${var.kafka_port}"
-        zookeeper_connection_url = "${aws_eip.zookeeper-public-ip.public_ip}:${var.zookeeper-port}"
+        zookeeper_connection_url = "${aws_instance.zookeeper.public_ip}:${var.zookeeper-port}"
     }
 }
 
@@ -26,7 +26,7 @@ resource "null_resource" "kafka-broker-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.kafka-broker-1-public-ip.public_ip}"
+            host = "${aws_instance.kafka-broker-1.public_ip}"
         }
     }
 
@@ -39,7 +39,7 @@ resource "null_resource" "kafka-broker-1-configure" {
             "export KAFKA_HEAP_OPTS=\"-Xmx500M -Xmx500M\"",
             "echo 'Starting Kafka'",
             "nohup kafka_2.11-1.0.0/bin/kafka-server-start.sh ~/kafka_server_properties.txt > ~/kafka-logs &",
-            "sleep 5s",
+            "sleep 10s",
             "echo 'Complete Setup'"
         ]
         
@@ -48,7 +48,7 @@ resource "null_resource" "kafka-broker-1-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.kafka-broker-1-public-ip.public_ip}"
+            host = "${aws_instance.kafka-broker-1.public_ip}"
         }
     }
 }
@@ -58,9 +58,9 @@ data "template_file" "kafka-broker-2-config" {
     template = "${file("./kafka_configuration/kafka_server_properties.tpl")}"
     vars {
         broker_id = "1"
-        kafka_public_ip = "${aws_eip.kafka-broker-2-public-ip.public_ip}"
+        kafka_public_ip = "${aws_instance.kafka-broker-2.public_ip}"
         kafka_port = "${var.kafka_port}"
-        zookeeper_connection_url = "${aws_eip.zookeeper-public-ip.public_ip}:2181"
+        zookeeper_connection_url = "${aws_instance.zookeeper.public_ip}:2181"
     }
 }
 
@@ -81,7 +81,7 @@ resource "null_resource" "kafka-broker-2-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.kafka-broker-2-public-ip.public_ip}"
+            host = "${aws_instance.kafka-broker-2.public_ip}"
         }
     }
 
@@ -94,7 +94,7 @@ resource "null_resource" "kafka-broker-2-configure" {
             "export KAFKA_HEAP_OPTS=\"-Xmx500M -Xmx500M\"",
             "echo 'Starting Kafka'",
             "nohup kafka_2.11-1.0.0/bin/kafka-server-start.sh ~/kafka_server_properties.txt > ~/kafka-logs &",
-            "sleep 5s",
+            "sleep 10s",
             "echo 'Complete Setup'"
         ]
         
@@ -103,7 +103,7 @@ resource "null_resource" "kafka-broker-2-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.kafka-broker-2-public-ip.public_ip}"
+            host = "${aws_instance.kafka-broker-2.public_ip}"
         }
     }
 }

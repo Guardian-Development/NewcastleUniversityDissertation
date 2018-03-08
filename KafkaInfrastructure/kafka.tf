@@ -31,13 +31,3 @@ resource "aws_instance" "kafka-broker-2" {
         Name = "Kafka-Broker-2"
     }
 }
-
-# Public IP of Kafka Broker 1 EC2 instance
-resource "aws_eip" "kafka-broker-1-public-ip" {
-  instance = "${aws_instance.kafka-broker-1.id}"
-}
-
-# Public IP of Kafka Broker 2 EC2 instance
-resource "aws_eip" "kafka-broker-2-public-ip" {
-    instance = "${aws_instance.kafka-broker-2.id}"
-}

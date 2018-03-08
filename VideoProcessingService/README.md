@@ -66,6 +66,10 @@ To see messages published to topic in console:
 
 - bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topic_name --from-beginning
 
+To create string messages to a topic in console: 
+
+- bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topic_name
+
 ### Test Videos
 
     - https://www.youtube.com/watch?v=hTUyzF4v9KA

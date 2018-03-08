@@ -23,7 +23,7 @@ resource "null_resource" "zookeeper-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.zookeeper-public-ip.public_ip}"
+            host = "${aws_instance.zookeeper.public_ip}"
         }
     }
 
@@ -35,7 +35,7 @@ resource "null_resource" "zookeeper-configure" {
             "tar -xzf kafka_2.11-1.0.0.tgz",
             "echo 'Starting Zookeeper'",
             "nohup kafka_2.11-1.0.0/bin/zookeeper-server-start.sh ~/zookeeper_server_properties.txt > ~/zookeeper-logs &",
-            "sleep 5s",
+            "sleep 10s",
             "echo 'Complete Setup'"
         ]
         
@@ -44,7 +44,7 @@ resource "null_resource" "zookeeper-configure" {
             timeout = "5m"
             user = "ubuntu"
             private_key = "${file(var.ec2_secret_key_file_path)}"
-            host = "${aws_eip.zookeeper-public-ip.public_ip}"
+            host = "${aws_instance.zookeeper.public_ip}"
         }
     }
 }

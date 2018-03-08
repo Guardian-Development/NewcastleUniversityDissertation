@@ -14,8 +14,3 @@ resource "aws_instance" "zookeeper" {
         Name = "Zookeeper"
     }
 }
-
-# Public IP of Zookeeper EC2 instance
-resource "aws_eip" "zookeeper-public-ip" {
-  instance = "${aws_instance.zookeeper.id}"
-}
