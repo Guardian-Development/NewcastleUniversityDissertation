@@ -20,14 +20,14 @@ Project built from template engine found: https://github.com/holdenk/sparkProjec
     - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
     - sudo apt-get update
     - sudo apt-get install sbt
-4. Install Apache Spark without Hadoop: 
-    - https://www.apache.org/dyn/closer.lua/spark/spark-2.3.0/spark-2.3.0-bin-without-hadoop.tgz 
-5. tar -xzf spark-2.3.0-bin-without-hadoop.tgz
+4. Install Apache Spark: 
+    - https://www.apache.org/dyn/closer.lua/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz
+5. tar -xzf spark-2.3.0-bin-hadoop2.7.tgz
 
 ## To Run
 ### Command Line
 From within the activityanalysisservice folder run: 
-- sbt clean run
+- sbt clean run (command line arguments)
 
 ### IntelliJ
 - Edit Configurations -> Add Configuration -> sbt Task 
@@ -44,6 +44,3 @@ From within the activityanalysisservice folder run:
     - ./bin/spark-submit --class main.class.Name --master spark://clusterurl:port jar-file-path --command-line-arguments
 5. To see job running visit: 
     - localhost:8080
-
-To view stdout from the flink task running:
-- tail -f flink-1.4.1/log/flink*-taskmanager-*.out
