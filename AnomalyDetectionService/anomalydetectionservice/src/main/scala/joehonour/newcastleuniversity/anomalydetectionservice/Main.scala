@@ -1,5 +1,6 @@
 package joehonour.newcastleuniversity.anomalydetectionservice
 
+import joehonour.newcastleuniversity.anomalydetectionservice.messages.MovementObserved
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
@@ -20,7 +21,7 @@ object Main {
       "key.deserializer" -> classOf[StringDeserializer],
       "value.deserializer" -> classOf[StringDeserializer],
       "group.id" -> "anomaly-detection-service",
-      "auto.offset.reset" -> "latest"
+      "auto.offset.reset" -> "earliest"
     )
 
     val topics = Array(config.activity_analysis_topic())
@@ -30,7 +31,10 @@ object Main {
       Subscribe[String, String](topics, kafkaParams)
     )
 
-    kafkaStream.map(record => (record.key, record.value)).map(t => t._2).print()
+    kafkaStream
+      .map { _.value }
+      .map { MovementObserved.fromJson }
+      .print()
 
     stream.start()
     stream.awaitTermination()
