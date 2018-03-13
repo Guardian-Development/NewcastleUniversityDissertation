@@ -1,11 +1,7 @@
 package joehonour.newcastleuniversity.anomalydetectionservice
 
-import joehonour.newcastleuniversity.anomalydetectionservice.messages.MovementObserved
-import org.apache.kafka.common.serialization.StringDeserializer
+import joehonour.newcastleuniversity.anomalydetectionservice.input_streams.InputStreams
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
-import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
-import org.apache.spark.streaming.kafka010._
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 object Main {
@@ -16,24 +12,8 @@ object Main {
     val sparkConf = new SparkConf().setMaster(config.master()).setAppName("anomaly-detection-service")
     val stream = new StreamingContext(sparkConf, Seconds(config.spark_interval()))
 
-    val kafkaParams = Map[String, Object](
-      "bootstrap.servers" -> config.bootstrap_servers(),
-      "key.deserializer" -> classOf[StringDeserializer],
-      "value.deserializer" -> classOf[StringDeserializer],
-      "group.id" -> "anomaly-detection-service",
-      "auto.offset.reset" -> "earliest"
-    )
-
-    val topics = Array(config.activity_analysis_topic())
-    val kafkaStream = KafkaUtils.createDirectStream[String, String](
-      stream,
-      PreferConsistent,
-      Subscribe[String, String](topics, kafkaParams)
-    )
-
-    kafkaStream
-      .map { _.value }
-      .map { MovementObserved.fromJson }
+    InputStreams
+      .kafkaStreamForMovementObservedMessageTopic(config, stream)
       .print()
 
     stream.start()

@@ -8,7 +8,7 @@ lazy val root = (project in file(".")).
     name := "AnomalyDetectionService",
     version := "0.1-SNAPSHOT",
     sparkVersion := "2.3.0",
-    sparkComponents := Seq("streaming", "streaming-kafka-0-10"),
+    sparkComponents := Seq("streaming", "mllib", "streaming-kafka-0-10"),
 
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),

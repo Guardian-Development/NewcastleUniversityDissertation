@@ -9,7 +9,7 @@ case class MovementObserved(uuid: String,
                             from_position_y: Double,
                             to_position_x: Double,
                             to_position_y: Double,
-average_displacement: Double)
+                            average_displacement: Double)
 
 object MovementObserved {
 
