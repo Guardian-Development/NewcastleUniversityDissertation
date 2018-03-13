@@ -1,4 +1,4 @@
-package newcastleuniversity.joehonour.anomalydetectionservice
+package joehonour.newcastleuniversity.anomalydetectionservice
 
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.SparkConf
@@ -10,7 +10,7 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 object Main {
 
   def main(args: Array[String]): Unit = {
-    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCount")
+    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("anomaly-detection-service")
     val ssc = new StreamingContext(sparkConf, Seconds(10))
 
     val kafkaParams = Map[String, Object](

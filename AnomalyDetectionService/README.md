@@ -31,4 +31,19 @@ From within the activityanalysisservice folder run:
 
 ### IntelliJ
 - Edit Configurations -> Add Configuration -> sbt Task 
-- Then enter into Tasks: clean run
+- Then enter into Tasks: run
+
+## Running in Spark Cluster
+1. Make sure you have ssh installed
+    - sudo apt-get install openssh-client openssh-server
+2. Start the Spark Cluster
+    - /spark-2.3.0-bin-hadoop2.7/sbin/start-all.sh
+3. Build project into fat jar
+    - sbt clean assembly (from within project folder)
+4. Submit job to Spark: 
+    - ./bin/spark-submit --class main.class.Name --master spark://clusterurl:port jar-file-path --command-line-arguments
+5. To see job running visit: 
+    - localhost:8080
+
+To view stdout from the flink task running:
+- tail -f flink-1.4.1/log/flink*-taskmanager-*.out
