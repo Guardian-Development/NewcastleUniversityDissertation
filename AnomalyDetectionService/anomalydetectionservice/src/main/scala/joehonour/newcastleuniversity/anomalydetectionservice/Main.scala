@@ -10,27 +10,29 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 object Main {
 
   def main(args: Array[String]): Unit = {
-    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("anomaly-detection-service")
-    val ssc = new StreamingContext(sparkConf, Seconds(10))
+
+    val config = new CommandLineConfiguration(args)
+    val sparkConf = new SparkConf().setMaster(config.master()).setAppName("anomaly-detection-service")
+    val stream = new StreamingContext(sparkConf, Seconds(config.spark_interval()))
 
     val kafkaParams = Map[String, Object](
-      "bootstrap.servers" -> "localhost:9092",
+      "bootstrap.servers" -> config.bootstrap_servers(),
       "key.deserializer" -> classOf[StringDeserializer],
       "value.deserializer" -> classOf[StringDeserializer],
-      "group.id" -> "test",
+      "group.id" -> "anomaly-detection-service",
       "auto.offset.reset" -> "latest"
     )
 
-    val topics = Array("test_topic")
-    val stream = KafkaUtils.createDirectStream[String, String](
-      ssc,
+    val topics = Array(config.activity_analysis_topic())
+    val kafkaStream = KafkaUtils.createDirectStream[String, String](
+      stream,
       PreferConsistent,
       Subscribe[String, String](topics, kafkaParams)
     )
 
-    stream.map(record => (record.key, record.value)).map(t => t._2).print()
+    kafkaStream.map(record => (record.key, record.value)).map(t => t._2).print()
 
-    ssc.start()
-    ssc.awaitTermination()
+    stream.start()
+    stream.awaitTermination()
   }
 }
