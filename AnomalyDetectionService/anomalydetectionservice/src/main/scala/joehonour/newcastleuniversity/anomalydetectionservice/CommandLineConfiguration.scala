@@ -7,5 +7,6 @@ class CommandLineConfiguration (arguments: Seq[String]) extends ScallopConf(argu
   val spark_interval: ScallopOption[Int] = opt[Int](required = true)
   val bootstrap_servers: ScallopOption[String] = opt[String](required = true)
   val activity_analysis_topic: ScallopOption[String] = opt[String](required = true)
+  val activity_anomaly_k_amount: ScallopOption[Int] = opt[Int](required = true)
   verify()
 }
