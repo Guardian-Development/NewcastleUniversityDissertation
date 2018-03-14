@@ -18,6 +18,7 @@ lazy val root = (project in file(".")).
 
     libraryDependencies ++= Seq(
         "org.rogach" %% "scallop" % "3.1.2",
+        "org.apache.spark" %% "spark-mllib" % sparkVersion.value,
         ("org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion.value).exclude("org.spark-project.spark", "unused")),
 
     // uses compile classpath for the run task, including "provided" jar (cf http://stackoverflow.com/a/21803413/3827)
