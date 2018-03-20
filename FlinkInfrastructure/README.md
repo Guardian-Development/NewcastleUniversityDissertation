@@ -1,4 +1,4 @@
-# Activity Analysis Infrastructure
+# Flink Infrastructure
 
 The production infrastructure required to run Apache Flink publicly on AWS. 
 

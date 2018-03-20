@@ -1,6 +1,6 @@
 # Kafka Insfrastructure
 
-The production infrastructure required to run Apache Kafka publicly on AWS. Sets up a 2 node Kafka cluster (1 node Zookeeper, 2 nodes Kafka Broker)
+The production infrastructure required to run Apache Kafka publicly on AWS. Sets up a 3 node Kafka cluster (1 node Zookeeper, 2 nodes Kafka Broker)
 
 ## Requirements
 

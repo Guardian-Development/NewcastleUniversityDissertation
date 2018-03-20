@@ -44,3 +44,6 @@ From within the activityanalysisservice folder run:
     - ./bin/spark-submit --class main.class.Name --master spark://clusterurl:port jar-file-path --command-line-arguments
 5. To see job running visit: 
     - localhost:8080
+
+
+    spark-2.3.0-bin-hadoop2.7/bin/spark-submit --class joehonour.newcastleuniversity.anomalydetectionservice.Main --master spark://34.242.118.196:7077 --executor-memory 500m ~/NewcastleUniversityDissertation/AnomalyDetectionService/anomalydetectionservice/target/scala-2.11/AnomalyDetectionService-assembly-0.1-SNAPSHOT.jar --master spark://34.242.118.196:7077 --spark_interval 10 --bootstrap_servers localhost:9092 --activity_analysis_topic activity_analysis  --anomaly_score_topic anomaly_score_output --activity_anomaly_k_amount 5
