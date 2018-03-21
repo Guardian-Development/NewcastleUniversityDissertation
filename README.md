@@ -24,6 +24,10 @@ Contains the AWS Apache Kafka Infrastructure to be used in production.
 
 Contains the AWS Apache Flink Infrastructure to be used in production.
 
+### Neo4jInfrastructure
+
+Contains the AWS Neo4j Infrastructure to be used in production.
+
 ### VideoProcessingService
 
 Provides the client video processing tools that allow you to detect objects in videos and send this information to server.
