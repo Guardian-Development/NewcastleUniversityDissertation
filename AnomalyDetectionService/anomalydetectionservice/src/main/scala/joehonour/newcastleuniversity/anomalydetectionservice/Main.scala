@@ -30,10 +30,10 @@ object Main {
   private def anomalyDetectionStreamFor(config: CommandLineConfiguration, context: StreamingContext): DStream[AnomalyScore] = {
     KMeansStreamPredictorBuilder
       .buildKMeansDistancePredictor[MovementObserved](
-      InputStreams.kafkaStreamForMovementObservedMessageTopic(config, context),
-      () => new StreamingKMeans().setK(config.activity_anomaly_k_amount()).setDecayFactor(1.0).setRandomCenters(6, 0, 1),
-      MovementObserved.toVector,
-      t => IdentifiableVector(t.uuid, MovementObserved.toVector(t)))
+        InputStreams.kafkaStreamForMovementObservedMessageTopic(config, context),
+        () => new StreamingKMeans().setK(config.activity_anomaly_k_amount()).setDecayFactor(1.0).setRandomCenters(6, 0, 1),
+        MovementObserved.toVector,
+        t => IdentifiableVector(t.movement_uuid, MovementObserved.toVector(t)))
       .map(t => AnomalyScore(t.uuid, t.distance))
   }
 }

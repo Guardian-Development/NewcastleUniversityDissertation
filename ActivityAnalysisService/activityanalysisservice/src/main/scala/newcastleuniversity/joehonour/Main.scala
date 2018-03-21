@@ -79,6 +79,7 @@ object Main {
   def registerBehaviourDetectedOutput(sourceOfBehaviourAnalysis: DataStream[DetectedMovement],
                                       properties: Properties): DataStreamSink[MovementObserved] = {
     val behaviourDetected = sourceOfBehaviourAnalysis.map { runningMovement => MovementObserved(
+      java.util.UUID.randomUUID.toString,
       runningMovement.uuid,
       runningMovement.movement_type,
       runningMovement.fromLocationX,

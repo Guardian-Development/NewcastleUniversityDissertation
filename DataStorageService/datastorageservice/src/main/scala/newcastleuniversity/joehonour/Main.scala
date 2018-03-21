@@ -55,7 +55,7 @@ object Main {
       val creationScript =
         s"""
            |CREATE (object:ActivityObserved {
-           |  uuid:'${o.uuid}',
+           |  uuid:'${o.movement_uuid}',
            |  movement_type:'${o.movement_type}',
            |  from_position_x:${o.from_position_x},
            |  from_position_y:${o.from_position_y},
@@ -64,6 +64,15 @@ object Main {
            |  average_displacement:${o.average_displacement}})
            |""".stripMargin
       session.run(creationScript)
+
+
+      val activityToObservations =
+        s"""
+           |MATCH (a:ActivityObserved),(b:DetectedObject)
+           |WHERE a.uuid = '${o.movement_uuid}' AND b.uuid = '${o.object_uuid}'
+           |MERGE (a)-[r:OBSERVED_FROM]->(b)
+        """.stripMargin
+      session.run(activityToObservations)
 
       session.close()
       driver.close()
@@ -88,14 +97,6 @@ object Main {
            |  score:${o.score}})
            |""".stripMargin
       session.run(creationScript)
-
-      val activityToObservations =
-        s"""
-           |MATCH (a:ActivityObserved),(b:DetectedObject)
-           |WHERE a.uuid = '${o.uuid}' AND b.uuid = '${o.uuid}'
-           |MERGE (a)-[r:OBSERVED_FROM]->(b)
-        """.stripMargin
-      session.run(activityToObservations)
 
       val anomalyToActivity =
         s"""
