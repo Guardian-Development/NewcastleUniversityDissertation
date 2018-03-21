@@ -1,9 +1,11 @@
 package newcastleuniversity.joehonour
 
+import java.util.Properties
+
 import newcastleuniversity.joehonour.input_streams.InputStreams
+import newcastleuniversity.joehonour.message_graph_converters._
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
-import org.neo4j.driver.v1.{AuthTokens, GraphDatabase}
-import org.neo4j.driver.v1.Config
+import org.neo4j.driver.v1._
 
 object Main {
 
@@ -16,41 +18,15 @@ object Main {
       .addSource(InputStreams.kafkaStreamForFrameMessageTopic(properties))
 
     frameInputStream.map(f => {
-      val config = Config.build.withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig
-      val driver = GraphDatabase.driver(
-        properties.getProperty("neo4j.connection.url"),
-        AuthTokens.basic(
-          properties.getProperty("neo4j.database.username"),
-          properties.getProperty("neo4j.database.password")),
-        config)
-      val session = driver.session
-
-      val frameCreation =
-        s"""
-           |CREATE (object:Frame {
-           |  uuid:'${f.frame_uuid}'})
-           |""".stripMargin
+      val (driver, session) = databaseSessionFor(properties)
+      val frameCreation = FrameConverter.toCreateScript(f)
       session.run(frameCreation)
 
       f.detected_objects.foreach(o => {
-        val objectCreation =
-          s"""
-             |CREATE (object:DetectedObject {
-             |  type:'${o.`type`}',
-             |  uuid:'${o.uuid}',
-             |  y_position:${o.y_position},
-             |  x_position:${o.x_position},
-             |  width:${o.width},
-             |  height:${o.height}})
-             |""".stripMargin
+        val objectCreation = DetectedObjectConverter.toCreateScript(o)
         session.run(objectCreation)
 
-        val objectToFrame =
-          s"""
-             |MATCH (a:DetectedObject),(b:Frame)
-             |WHERE a.uuid = '${o.uuid}' AND b.uuid = '${f.frame_uuid}'
-             |MERGE (a)-[r:WITHIN_FRAME]->(b)
-        """.stripMargin
+        val objectToFrame = RelationshipConverter.detectedObjectToFrameRelationship(o, f)
         session.run(objectToFrame)
       })
 
@@ -62,34 +38,11 @@ object Main {
         .addSource(InputStreams.kafkaStreamForActivityMessageTopic(properties))
 
     activityInputStream.map(o => {
-      val config = Config.build.withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig
-      val driver = GraphDatabase.driver(
-        properties.getProperty("neo4j.connection.url"),
-        AuthTokens.basic(
-          properties.getProperty("neo4j.database.username"),
-          properties.getProperty("neo4j.database.password")),
-        config)
-      val session = driver.session
-      val creationScript =
-        s"""
-           |CREATE (object:ActivityObserved {
-           |  uuid:'${o.movement_uuid}',
-           |  movement_type:'${o.movement_type}',
-           |  from_position_x:${o.from_position_x},
-           |  from_position_y:${o.from_position_y},
-           |  to_position_x:${o.to_position_x},
-           |  to_position_y:${o.to_position_y},
-           |  average_displacement:${o.average_displacement}})
-           |""".stripMargin
+      val (driver, session) = databaseSessionFor(properties)
+      val creationScript = ActivityObservedConverter.toCreateScript(o)
       session.run(creationScript)
 
-
-      val activityToObservations =
-        s"""
-           |MATCH (a:ActivityObserved),(b:DetectedObject)
-           |WHERE a.uuid = '${o.movement_uuid}' AND b.uuid = '${o.object_uuid}'
-           |MERGE (a)-[r:OBSERVED_FROM]->(b)
-        """.stripMargin
+      val activityToObservations = RelationshipConverter.activityToDetectedObjectRelationship(o)
       session.run(activityToObservations)
 
       session.close()
@@ -100,28 +53,11 @@ object Main {
         .addSource(InputStreams.kafkaStreamForAnomalyMessageTopic(properties))
 
     anomalyInputStream.map(o => {
-      val config = Config.build.withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig
-      val driver = GraphDatabase.driver(
-        properties.getProperty("neo4j.connection.url"),
-        AuthTokens.basic(
-          properties.getProperty("neo4j.database.username"),
-          properties.getProperty("neo4j.database.password")),
-        config)
-      val session = driver.session
-      val creationScript =
-        s"""
-           |CREATE (object:AnomalyScore {
-           |  uuid:'${o.uuid}',
-           |  score:${o.score}})
-           |""".stripMargin
+      val (driver, session) = databaseSessionFor(properties)
+      val creationScript = AnomalyScoreConverter.toCreateScript(o)
       session.run(creationScript)
 
-      val anomalyToActivity =
-        s"""
-           |MATCH (a:AnomalyScore),(b:ActivityObserved)
-           |WHERE a.uuid = '${o.uuid}' AND b.uuid = '${o.uuid}'
-           |MERGE (a)-[r:ANOMALY_SCORE_FROM]->(b)
-        """.stripMargin
+      val anomalyToActivity = RelationshipConverter.anomalyToActivityObservedRelationship(o)
       session.run(anomalyToActivity)
 
       session.close()
@@ -129,5 +65,17 @@ object Main {
     })
 
     env.execute("data-storage-task")
+  }
+
+  private def databaseSessionFor(properties: Properties): (Driver, Session) = {
+    val config = Config.build.withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig
+    val driver = GraphDatabase.driver(
+      properties.getProperty("neo4j.connection.url"),
+      AuthTokens.basic(
+        properties.getProperty("neo4j.database.username"),
+        properties.getProperty("neo4j.database.password")),
+      config)
+    val session = driver.session
+    (driver, session)
   }
 }

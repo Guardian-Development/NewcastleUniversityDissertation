@@ -27,7 +27,7 @@ Project built from template engine found: https://ci.apache.org/projects/flink/f
     - ./bin/start-local.sh
 7. Download Neo4j
     - https://neo4j.com/download/
-8. chmod -x {IMAGE NAME}
+8. chmod +x {IMAGE NAME}
 8. run the Neo4j image downloaded
 
 To stop the Flink cluster: 
