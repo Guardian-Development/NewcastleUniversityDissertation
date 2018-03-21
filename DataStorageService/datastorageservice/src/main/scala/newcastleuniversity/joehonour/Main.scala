@@ -14,9 +14,8 @@ object Main {
 
     val frameInputStream = env
       .addSource(InputStreams.kafkaStreamForFrameMessageTopic(properties))
-      .flatMap { _.detected_objects }
 
-    frameInputStream.map(o => {
+    frameInputStream.map(f => {
       val config = Config.build.withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig
       val driver = GraphDatabase.driver(
         properties.getProperty("neo4j.connection.url"),
@@ -25,17 +24,36 @@ object Main {
           properties.getProperty("neo4j.database.password")),
         config)
       val session = driver.session
-      val script =
+
+      val frameCreation =
         s"""
-           |CREATE (object:DetectedObject {
-           |  type:'${o.`type`}',
-           |  uuid:'${o.uuid}',
-           |  y_position:${o.y_position},
-           |  x_position:${o.x_position},
-           |  width:${o.width},
-           |  height:${o.height}})
+           |CREATE (object:Frame {
+           |  uuid:'${f.frame_uuid}'})
            |""".stripMargin
-      session.run(script)
+      session.run(frameCreation)
+
+      f.detected_objects.foreach(o => {
+        val objectCreation =
+          s"""
+             |CREATE (object:DetectedObject {
+             |  type:'${o.`type`}',
+             |  uuid:'${o.uuid}',
+             |  y_position:${o.y_position},
+             |  x_position:${o.x_position},
+             |  width:${o.width},
+             |  height:${o.height}})
+             |""".stripMargin
+        session.run(objectCreation)
+
+        val objectToFrame =
+          s"""
+             |MATCH (a:DetectedObject),(b:Frame)
+             |WHERE a.uuid = '${o.uuid}' AND b.uuid = '${f.frame_uuid}'
+             |MERGE (a)-[r:WITHIN_FRAME]->(b)
+        """.stripMargin
+        session.run(objectToFrame)
+      })
+
       session.close()
       driver.close()
     })

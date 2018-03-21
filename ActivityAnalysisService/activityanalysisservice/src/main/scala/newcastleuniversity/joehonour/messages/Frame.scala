@@ -1,3 +1,3 @@
 package newcastleuniversity.joehonour.messages
 
-case class Frame(detected_objects: List[DetectedObject])
+case class Frame(frame_uuid: String, detected_objects: List[DetectedObject])

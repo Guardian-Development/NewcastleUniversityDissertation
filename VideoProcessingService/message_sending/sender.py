@@ -4,6 +4,7 @@ This service can be used to send information to server, for instance through Apa
 """
 from typing import Any, List
 import json
+import uuid
 from kafka import KafkaProducer
 from support.bounding_box import BoundingBox, convert_to_dict
 
@@ -68,5 +69,6 @@ def convert_bounding_box_to_dict(objects: List[BoundingBox]) -> dict:
     for detected_object in objects:
         json_detected_object = convert_to_dict(detected_object)
         built_objects.append(json_detected_object)
+    json_message["frame_uuid"] = str(uuid.uuid4())
     json_message["detected_objects"] = built_objects
     return json_message
