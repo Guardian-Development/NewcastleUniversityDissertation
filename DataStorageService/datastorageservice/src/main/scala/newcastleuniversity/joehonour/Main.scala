@@ -4,8 +4,6 @@ import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
 import org.neo4j.driver.v1.{AuthTokens, GraphDatabase}
 import org.neo4j.driver.v1.Config
 
-case class TestUser(name: String, lastName: String, age: Int, city: String)
-
 object Main {
 
   def main(args: Array[String]) {
