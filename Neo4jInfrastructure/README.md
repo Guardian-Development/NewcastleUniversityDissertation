@@ -17,7 +17,7 @@ The production infrastructure required to run Neo4j database publicly on AWS.
 3. In the current directory: terraform plan (params) -var-file="secret.tfvars"
 4. terraform apply (params) -var-file="secret.tfvars"
 
-The output parameter of the Job Manager gives you the IP to access the Flink UI, This should be done on port 8081. 
+The output parameter of the Neo4j instance gives you the IP to access the Neo4j UI, This should be done on port 7474. 
 
 ## To Destroy
 
