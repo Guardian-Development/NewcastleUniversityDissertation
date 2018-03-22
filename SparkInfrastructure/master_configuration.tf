@@ -14,6 +14,7 @@ resource "null_resource" "spark-master-1-configure" {
             "wget http://www.mirrorservice.org/sites/ftp.apache.org/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz",
             "tar -xzf spark-2.3.0-bin-hadoop2.7.tgz",
             "export SPARK_MASTER_HOST=\"${aws_instance.spark-master-1.public_dns}\"",
+            "sleep 5s",
             "nohup spark-2.3.0-bin-hadoop2.7/sbin/start-master.sh > ~/spark-logs &",
             "sleep 10s",
             "echo 'Complete Setup'"

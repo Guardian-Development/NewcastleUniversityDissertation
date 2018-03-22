@@ -20,8 +20,10 @@ object OutputStreams {
       .foreachRDD(t => {
         t.foreachPartition(q => {
           val kafkaProducer = kafkaProducerFor(properties)
-          val meta = q.map(kafkaProducer.send)
-          meta.foreach { _.get() }
+          q.foreach(r => {
+            val meta = kafkaProducer.send(r).get()
+            println(meta)
+          })
         })
       })
   }

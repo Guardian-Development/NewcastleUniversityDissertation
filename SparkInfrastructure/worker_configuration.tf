@@ -12,7 +12,7 @@ resource "null_resource" "spark-worker-1-configure" {
             "sudo apt-get -y install default-jre",
             "wget http://www.mirrorservice.org/sites/ftp.apache.org/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz",
             "tar -xzf spark-2.3.0-bin-hadoop2.7.tgz",
-            "nohup spark-2.3.0-bin-hadoop2.7/sbin/start-slave.sh ${aws_instance.spark-master-1.public_dns}:7077 -m 1000m > ~/spark-logs &",
+            "nohup spark-2.3.0-bin-hadoop2.7/sbin/start-slave.sh ${aws_instance.spark-master-1.public_dns}:7077> ~/spark-logs &",
             "sleep 10s",
             "echo 'Complete Setup'"
         ]
@@ -41,7 +41,7 @@ resource "null_resource" "spark-worker-2-configure" {
             "sudo apt-get -y install default-jre",
             "wget http://www.mirrorservice.org/sites/ftp.apache.org/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz",
             "tar -xzf spark-2.3.0-bin-hadoop2.7.tgz",
-            "nohup spark-2.3.0-bin-hadoop2.7/sbin/start-slave.sh ${aws_instance.spark-master-1.private_dns}:7077 -m 1000m > ~/spark-logs &",
+            "nohup spark-2.3.0-bin-hadoop2.7/sbin/start-slave.sh ${aws_instance.spark-master-1.private_dns}:7077> ~/spark-logs &",
             "sleep 10s",
             "echo 'Complete Setup'"
         ]
