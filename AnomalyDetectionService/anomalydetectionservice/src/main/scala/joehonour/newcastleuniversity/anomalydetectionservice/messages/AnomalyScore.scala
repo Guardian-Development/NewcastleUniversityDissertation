@@ -4,7 +4,7 @@ import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods.{compact, parse}
 import org.json4s.jackson.Serialization.write
 
-case class AnomalyScore(uuid: String, score: Double)
+case class AnomalyScore(uuid: String, cluster: Int, score: Double)
 
 object AnomalyScore {
 

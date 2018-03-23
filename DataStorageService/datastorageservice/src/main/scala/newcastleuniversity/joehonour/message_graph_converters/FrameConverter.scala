@@ -6,7 +6,7 @@ object FrameConverter {
 
   def toCreateScript(frame: Frame) : String = {
     s"""
-       |CREATE (object:Frame {
+       |MERGE (object:Frame {
        |  uuid:'${frame.frame_uuid}'})
        |""".stripMargin
   }

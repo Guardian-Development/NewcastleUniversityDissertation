@@ -34,6 +34,6 @@ object Main {
         () => new StreamingKMeans().setK(config.activity_anomaly_k_amount()).setDecayFactor(1.0).setRandomCenters(6, 0, 1),
         MovementObserved.toVector,
         t => IdentifiableVector(t.movement_uuid, MovementObserved.toVector(t)))
-      .map(t => AnomalyScore(t.uuid, t.distance))
+      .map(t => AnomalyScore(t.uuid, t.cluster, t.distance))
   }
 }

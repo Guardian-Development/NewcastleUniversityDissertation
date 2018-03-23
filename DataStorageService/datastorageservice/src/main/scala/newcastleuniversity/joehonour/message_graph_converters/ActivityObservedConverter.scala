@@ -5,7 +5,7 @@ import newcastleuniversity.joehonour.messages.ActivityObserved
 object ActivityObservedConverter {
   def toCreateScript(activityObserved: ActivityObserved) : String = {
     s"""
-       |CREATE (object:ActivityObserved {
+       |MERGE (object:ActivityObserved {
        |  uuid:'${activityObserved.movement_uuid}',
        |  movement_type:'${activityObserved.movement_type}',
        |  from_position_x:${activityObserved.from_position_x},

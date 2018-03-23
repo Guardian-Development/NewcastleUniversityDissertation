@@ -58,7 +58,9 @@ object Main {
       session.run(creationScript)
 
       val anomalyToActivity = RelationshipConverter.anomalyToActivityObservedRelationship(o)
+      val anomalyToCluster = RelationshipConverter.anomalyToClusterRelationship(o)
       session.run(anomalyToActivity)
+      session.run(anomalyToCluster)
 
       session.close()
       driver.close()

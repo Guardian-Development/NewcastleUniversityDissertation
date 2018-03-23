@@ -6,7 +6,7 @@ object DetectedObjectConverter {
 
   def toCreateScript(detectedObject: DetectedObject) : String = {
     s"""
-       |CREATE (object:DetectedObject {
+       |MERGE (object:DetectedObject {
        |  type:'${detectedObject.`type`}',
        |  uuid:'${detectedObject.uuid}',
        |  y_position:${detectedObject.y_position},

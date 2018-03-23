@@ -22,6 +22,6 @@ object KMeansStreamPredictorBuilder {
       .map { convertToIdentifiableVector }
       .map { m => IdentifiableVector(m.uuid, normalizer.transform(m.vector)) }
       .map { m => (m.uuid, m.vector, kMeansModel.latestModel().predict(m.vector)) }
-      .map { p => IdentifiableDistance(p._1, Vectors.sqdist(p._2, kMeansModel.latestModel().clusterCenters(p._3))) }
+      .map { p => IdentifiableDistance(p._1, p._3, Vectors.sqdist(p._2, kMeansModel.latestModel().clusterCenters(p._3))) }
   }
 }

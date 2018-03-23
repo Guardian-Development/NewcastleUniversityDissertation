@@ -15,7 +15,7 @@ object RelationshipConverter {
   def activityToDetectedObjectRelationship(activity: ActivityObserved) : String = {
     s"""
        |MATCH (a:ActivityObserved),(b:DetectedObject)
-       |WHERE a.uuid = '${activity.movement_uuid}' AND b.uuid = '${activity.movement_uuid}'
+       |WHERE a.uuid = '${activity.movement_uuid}' AND b.uuid = '${activity.object_uuid}'
        |MERGE (a)-[r:OBSERVED_FROM]->(b)
         """.stripMargin
   }
@@ -26,5 +26,13 @@ object RelationshipConverter {
        |WHERE a.uuid = '${anomalyScore.uuid}' AND b.uuid = '${anomalyScore.uuid}'
        |MERGE (a)-[r:ANOMALY_SCORE_FROM]->(b)
         """.stripMargin
+  }
+
+  def anomalyToClusterRelationship(anomalyScore: AnomalyScore) : String = {
+    s"""
+       |MATCH (a:AnomalyScore),(c:Cluster)
+       |WHERE a.uuid = '${anomalyScore.uuid}' and c.uuid = '${anomalyScore.cluster}'
+        MERGE (a)-[r:CLUSTER_DETECTED_IN]->(c)
+     """.stripMargin
   }
 }

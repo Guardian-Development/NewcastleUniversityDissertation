@@ -1,4 +1,4 @@
 package newcastleuniversity.joehonour.messages
 
-case class AnomalyScore(uuid: String, score: Double)
+case class AnomalyScore(uuid: String, cluster: Int, score: Double)
 
