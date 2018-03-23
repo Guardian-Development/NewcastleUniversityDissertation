@@ -2,6 +2,7 @@ name := "AnomalyAlertService"
 version := "0.1-SNAPSHOT"
 organization := "newcastleuniversity.joehonour"
 scalaVersion in ThisBuild := "2.11.7"
+resolvers += "lightshed-maven" at "http://dl.bintray.com/content/lightshed/maven"
 
 val flinkVersion = "1.4.1"
 
@@ -16,10 +17,15 @@ val jsonParsingDependencies = Seq(
   "org.json4s" %% "json4s-jackson" % "3.6.0-M2"
 )
 
+val emailDependencies = Seq(
+  "ch.lightshed" %% "courier" % "0.1.4"
+)
+
 lazy val root = (project in file(".")).
   settings(
     libraryDependencies ++= flinkDependencies,
-    libraryDependencies ++= jsonParsingDependencies
+    libraryDependencies ++= jsonParsingDependencies,
+    libraryDependencies ++= emailDependencies
   )
 
 mainClass in assembly := Some("newcastleuniversity.joehonour.Main")
