@@ -1,5 +1,7 @@
 package newcastleuniversity.joehonour
 
+import newcastleuniversity.joehonour.alerts.detectors.AlertDetector
+import newcastleuniversity.joehonour.alerts.outputs.EmailNotificationOutput
 import newcastleuniversity.joehonour.input_streams.InputStreams
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
 
@@ -10,11 +12,18 @@ object Main {
     val properties = CommandLineParser.parseCommandLineArguments(args)
     val env = StreamExecutionEnvironment.getExecutionEnvironment
 
-    val sourceOfDetectedObjects = env
+    val alertDetector = new AlertDetector(properties)
+    val emailNotificationSystem = new EmailNotificationOutput(properties)
+
+    val anomaliesToSendAlertsFor = env
       .addSource(InputStreams.kafkaStreamForAnomalyMessageTopic(properties))
+      .filter(alertDetector.anomalyRequiresAlert(_))
 
-    sourceOfDetectedObjects.print()
+    anomaliesToSendAlertsFor
+      .addSink(emailNotificationSystem.sendEmailForAnomaly(_))
 
-    env.execute("object-detection-task")
+    anomaliesToSendAlertsFor.print()
+
+    env.execute("anomaly-alert-task")
   }
 }
