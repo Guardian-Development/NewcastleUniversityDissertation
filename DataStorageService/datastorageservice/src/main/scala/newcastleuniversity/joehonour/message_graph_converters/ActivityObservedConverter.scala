@@ -7,6 +7,7 @@ object ActivityObservedConverter {
     s"""
        |MERGE (object:ActivityObserved {
        |  uuid:'${activityObserved.movement_uuid}',
+       |  object_uuid: '${activityObserved.object_uuid}',
        |  movement_type:'${activityObserved.movement_type}',
        |  from_position_x:${activityObserved.from_position_x},
        |  from_position_y:${activityObserved.from_position_y},
