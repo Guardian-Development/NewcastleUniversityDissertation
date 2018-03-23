@@ -12,16 +12,17 @@ object KMeansStreamPredictorBuilder {
 
   def buildKMeansDistancePredictor[T](inputStream: DStream[T],
                                       kMeansProducer: () => StreamingKMeans,
-                                      convertToVector: (T) => linalg.Vector,
                                       convertToIdentifiableVector: (T) => IdentifiableVector): DStream[IdentifiableDistance] = {
-
-    val normalizer = new Normalizer()
     val kMeansModel = kMeansProducer()
 
-    inputStream
+    val stream = inputStream
       .map { convertToIdentifiableVector }
-      .map { m => IdentifiableVector(m.uuid, normalizer.transform(m.vector)) }
-      .map { m => (m.uuid, m.vector, kMeansModel.latestModel().predict(m.vector)) }
-      .map { p => IdentifiableDistance(p._1, p._3, Vectors.sqdist(p._2, kMeansModel.latestModel().clusterCenters(p._3))) }
+      .map { m => IdentifiableVector(m.uuid, m.vector) }
+
+    kMeansModel.trainOn(stream.map(_.vector))
+
+      stream
+        .map { m => (m.uuid, m.vector, kMeansModel.latestModel().predict(m.vector)) }
+        .map { p => IdentifiableDistance(p._1, p._3, Vectors.sqdist(p._2, kMeansModel.latestModel().clusterCenters(p._3))) }
   }
 }

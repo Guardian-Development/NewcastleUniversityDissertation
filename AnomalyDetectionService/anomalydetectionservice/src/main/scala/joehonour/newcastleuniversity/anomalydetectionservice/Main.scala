@@ -31,8 +31,7 @@ object Main {
     KMeansStreamPredictorBuilder
       .buildKMeansDistancePredictor[MovementObserved](
         InputStreams.kafkaStreamForMovementObservedMessageTopic(config, context),
-        () => new StreamingKMeans().setK(config.activity_anomaly_k_amount()).setDecayFactor(1.0).setRandomCenters(6, 0, 1),
-        MovementObserved.toVector,
+        () => new StreamingKMeans().setK(config.activity_anomaly_k_amount()).setDecayFactor(5.0).setRandomCenters(6, 1, 1),
         t => IdentifiableVector(t.movement_uuid, MovementObserved.toVector(t)))
       .map(t => AnomalyScore(t.uuid, t.cluster, t.distance))
   }
