@@ -1,6 +1,6 @@
 package newcastleuniversity.joehonour.message_graph_converters
 
-import newcastleuniversity.joehonour.messages.{ActivityObserved, AnomalyScore, DetectedObject, Frame}
+import newcastleuniversity.joehonour.messages.{DetectedObject, Frame}
 
 object RelationshipConverter {
 
@@ -8,31 +8,37 @@ object RelationshipConverter {
     s"""
        |MATCH (a:DetectedObject),(b:Frame)
        |WHERE a.uuid = '${detectedObject.uuid}' AND b.uuid = '${frame.frame_uuid}'
-       |MERGE (a)-[r:WITHIN_FRAME]->(b)
+       |MERGE (a)-[r:WITHIN_FRAME { x_position: '${detectedObject.x_position}', y_position: '${detectedObject.y_position}'}]->(b)
         """.stripMargin
   }
 
-  def activityToDetectedObjectRelationship(activity: ActivityObserved) : String = {
+  def activityToDetectedObjectRelationship() : String = {
     s"""
-       |MATCH (a:ActivityObserved),(b:DetectedObject)
-       |WHERE a.uuid = '${activity.movement_uuid}' AND b.uuid = '${activity.object_uuid}'
+       |MATCH (a:ActivityObserved)
+       |WITH a
+       |MATCH (b:DetectedObject)
+       |where a.object_uuid = b.uuid
        |MERGE (a)-[r:OBSERVED_FROM]->(b)
-        """.stripMargin
+    """.stripMargin
   }
 
-  def anomalyToActivityObservedRelationship(anomalyScore: AnomalyScore) : String = {
+  def anomalyToActivityObservedRelationship() : String = {
     s"""
-       |MATCH (a:AnomalyScore),(b:ActivityObserved)
-       |WHERE a.uuid = '${anomalyScore.uuid}' AND b.uuid = '${anomalyScore.uuid}'
+       |MATCH (a:AnomalyScore)
+       |WITH a
+       |MATCH (b:ActivityObserved)
+       |where a.uuid = b.uuid
        |MERGE (a)-[r:ANOMALY_SCORE_FROM]->(b)
-        """.stripMargin
+    """.stripMargin
   }
 
-  def anomalyToClusterRelationship(anomalyScore: AnomalyScore) : String = {
+  def anomalyToClusterRelationship() : String = {
     s"""
-       |MATCH (a:AnomalyScore),(c:Cluster)
-       |WHERE a.uuid = '${anomalyScore.uuid}' and c.uuid = '${anomalyScore.cluster}'
-        MERGE (a)-[r:CLUSTER_DETECTED_IN]->(c)
-     """.stripMargin
+       |MATCH (a:AnomalyScore)
+       |WITH a
+       |MATCH (c:Cluster)
+       |where a.cluster = c.uuid
+       |MERGE (a)-[r:CLUSTER_DETECTED_IN]->(c)
+    """.stripMargin
   }
 }

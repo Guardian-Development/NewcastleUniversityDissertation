@@ -25,10 +25,14 @@ object Main {
       f.detected_objects.foreach(o => {
         val objectCreation = DetectedObjectConverter.toCreateScript(o)
         session.run(objectCreation)
+        println(o)
 
         val objectToFrame = RelationshipConverter.detectedObjectToFrameRelationship(o, f)
         session.run(objectToFrame)
       })
+
+      val activityToObservations = RelationshipConverter.activityToDetectedObjectRelationship()
+      session.run(activityToObservations)
 
       session.close()
       driver.close()
@@ -40,9 +44,10 @@ object Main {
     activityInputStream.map(o => {
       val (driver, session) = databaseSessionFor(properties)
       val creationScript = ActivityObservedConverter.toCreateScript(o)
+      println(o)
       session.run(creationScript)
 
-      val activityToObservations = RelationshipConverter.activityToDetectedObjectRelationship(o)
+      val activityToObservations = RelationshipConverter.activityToDetectedObjectRelationship()
       session.run(activityToObservations)
 
       session.close()
@@ -57,8 +62,10 @@ object Main {
       val creationScript = AnomalyScoreConverter.toCreateScript(o)
       session.run(creationScript)
 
-      val anomalyToActivity = RelationshipConverter.anomalyToActivityObservedRelationship(o)
-      val anomalyToCluster = RelationshipConverter.anomalyToClusterRelationship(o)
+      println(o)
+
+      val anomalyToActivity = RelationshipConverter.anomalyToActivityObservedRelationship()
+      val anomalyToCluster = RelationshipConverter.anomalyToClusterRelationship()
       session.run(anomalyToActivity)
       session.run(anomalyToCluster)
 

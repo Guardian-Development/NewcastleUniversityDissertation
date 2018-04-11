@@ -6,13 +6,12 @@ object DetectedObjectConverter {
 
   def toCreateScript(detectedObject: DetectedObject) : String = {
     s"""
-       |MERGE (object:DetectedObject {
-       |  type:'${detectedObject.`type`}',
-       |  uuid:'${detectedObject.uuid}',
-       |  y_position:${detectedObject.y_position},
-       |  x_position:${detectedObject.x_position},
-       |  width:${detectedObject.width},
-       |  height:${detectedObject.height}})
-       |""".stripMargin
+       |MERGE (n: DetectedObject { uuid: '${detectedObject.uuid}' })
+       |set n.type = '${detectedObject.`type`}',
+       |    n.y_position = ${detectedObject.y_position},
+       |    n.x_position = ${detectedObject.x_position},
+       |    n.width = ${detectedObject.width},
+       |    n.height = ${detectedObject.height}
+     """.stripMargin
   }
 }
